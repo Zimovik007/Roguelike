@@ -89,11 +89,6 @@ int Character::cntDamage()
 	return damage;
 }
 
-void Character::Dead()
-{
-	
-}
-
 void Knight::Move(Map &m, std::vector<Character*> All)
 {
 	int i, tx, ty, changed = 0;
@@ -129,7 +124,6 @@ void Knight::Move(Map &m, std::vector<Character*> All)
 			if ((All[i]->PosX() == tx) && (All[i]->PosY() == ty))
 				if (All[i]->Damage(cntDamage()))
 				{
-					All[i]->Dead();
 					All.erase(All.begin() + i);
 					m.Change(tx, ty, posX, posY);
 					changed = 1;
@@ -183,10 +177,7 @@ void Monster::Move(Map &m, std::vector<Character*> All)
 int Character::Damage(int dam)
 {
 	health -= dam;
-	if (health <= 0)
-		return 1;
-	else 
-		return 0;
+	return health <= 0 ? 1 : 0;
 }
 
 int Character::PosX()
