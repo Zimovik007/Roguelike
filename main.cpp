@@ -7,10 +7,9 @@
 #include "map.h"
 #include "char.h"
 
-#define Z_num 80
-#define D_num 10
-
 int i;
+int Z_num = 40;
+int D_num = 10;
 Map test_map;
 Knight K(test_map);
 Princess P(test_map);
@@ -43,6 +42,12 @@ void NextMove()
 
 int main()
 {
+	int difficult;
+	std::cout << "1 Легкий, 2 Средний, 3 Сложный" << std::endl;
+	std::cin >> difficult;
+	if (difficult == 2){Z_num *= 2; D_num *= 2;}
+	if (difficult == 3){Z_num *= 3; D_num *= 3;}
+	
 	All_Char.push_back(&K);
 	All_Char.push_back(&P);	
 	Zombie *Z = (Zombie*)operator new(sizeof(Zombie) * Z_num);

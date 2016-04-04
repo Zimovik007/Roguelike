@@ -23,7 +23,6 @@ Map::Map()
 	size = width;
 	while (!feof(fin))
 	{
-		
 		if (c != '\n')
 			size++;
 		fscanf(fin, "%c", &c);
