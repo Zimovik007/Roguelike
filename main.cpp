@@ -12,8 +12,8 @@
 
 int i;
 Map test_map;
-Knight K(53, 10, test_map);
-Princess P(123, 5, test_map);
+Knight K(test_map);
+Princess P(test_map);
 Zombie Z[Z_num];
 Dragon D[D_num];
 std::vector<Character*> All_Char;

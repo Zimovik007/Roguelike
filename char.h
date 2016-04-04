@@ -24,14 +24,14 @@ protected:
 class Princess : public Character
 {
 public:
-	Princess(int x, int y, Map &m);
+	Princess(Map &m);
 	void Move(Map &m, std::vector<Character*> &All);
 };
 
 class Knight : public Character
 {
 public:
-	Knight(int x, int y, Map &m);
+	Knight(Map &m);
 	int Winner();
 	void Move(Map &m, std::vector<Character*> &All);
 	int CheckWin(Princess P);

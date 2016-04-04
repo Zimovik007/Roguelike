@@ -7,8 +7,15 @@
 #include "char.h"
 
 
-Knight::Knight(int x, int y, Map &m)
+Knight::Knight(Map &m)
 {
+	int x = rand() % m.Width();
+	int y = rand() % m.Height();
+	while (m.Map_elem(x, y) != '.')
+	{
+		x = rand() % m.Width();
+		y = rand() % m.Height();
+	}
 	health = 100;
 	damage = 10;
 	posX = x;
@@ -22,8 +29,15 @@ int Knight::Winner()
 	return win;
 }
 
-Princess::Princess(int x, int y, Map &m)
+Princess::Princess(Map &m)
 {
+	int x = rand() % m.Width();
+	int y = rand() % m.Height();
+	while (m.Map_elem(x, y) != '.')
+	{
+		x = rand() % m.Width();
+		y = rand() % m.Height();
+	}
 	health = 100;
 	damage = 0;
 	posX = x;
