@@ -5,7 +5,7 @@ class Map
 private:
 	int height;
 	int width;
-	char map[56][205];
+	char map[29][127];
 public:
 	Map(int w1, int h1);
 	void display();
