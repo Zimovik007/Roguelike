@@ -21,6 +21,8 @@ Knight::Knight(Map &m)
 	posX = x;
 	posY = y;
 	win = 0;
+	level = 0;
+	mob_to_next_level = 3;
 	m.Create_Char(x, y, 'K');
 }
 
@@ -103,6 +105,14 @@ int Character::cntDamage()
 	return damage;
 }
 
+void Knight::LevelUp()
+{
+	level++;
+	health = 100 + 10*level;
+	damage += 2;
+	mob_to_next_level = 3 + level;
+}
+
 void Knight::Move(Map &m, std::vector<Character*> &All)
 {
 	int i, tx, ty, changed = 0;
@@ -140,6 +150,9 @@ void Knight::Move(Map &m, std::vector<Character*> &All)
 				{
 					All.erase(All.begin() + i);
 					m.Change(tx, ty, posX, posY);
+					mob_to_next_level--;
+					if (!mob_to_next_level)
+						LevelUp();
 					changed = 1;
 					break;
 				}						
@@ -204,6 +217,11 @@ int Character::PosX()
 int Character::PosY()
 {
 	return posY;
+}
+
+int Character::Level()
+{
+	return level;
 }
 
 int Knight::CheckWin(Princess P)

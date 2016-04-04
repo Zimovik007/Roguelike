@@ -14,11 +14,13 @@ public:
 	virtual int cntDamage();
 	virtual int PosX();
 	virtual int PosY();
+	virtual int Level();
 protected:
 	int health;
 	int damage;
 	int posX;
 	int posY;
+	int level;
 };
 
 class Princess : public Character
@@ -35,8 +37,10 @@ public:
 	int Winner();
 	void Move(Map &m, std::vector<Character*> &All);
 	int CheckWin(Princess P);
+	void LevelUp();
 protected:
 	int win;
+	int mob_to_next_level;
 };
 
 class Monster : public Character

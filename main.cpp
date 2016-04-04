@@ -86,7 +86,7 @@ int main()
 	test_map.display();
 	while (!GameOver())
 	{
-		std::cout << "Health: " << K.HitPoints() << std::endl;
+		std::cout << "Knight-Health: " << K.HitPoints() << "  |  Princess-Health: " << P.HitPoints() << "  |  Enemies: " << All_Char.size() - 2 << "  |  Level: " << All_Char[0]->Level() << std::endl;
 		NextMove();
 		test_map.display();		
 	}
