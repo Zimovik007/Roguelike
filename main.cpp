@@ -11,13 +11,12 @@
 #define D_num 10
 
 int i;
-Map test_map(127, 29);
+Map test_map;
 Knight K(53, 10, test_map);
 Princess P(123, 5, test_map);
 Zombie Z[Z_num];
 Dragon D[D_num];
 std::vector<Character*> All_Char;
-//Character *All_Char[Z_num + D_num + 2];
 
 int GameOver()
 {
@@ -55,8 +54,8 @@ void choice_position_monsters()
 		y = 0;
 		while (test_map.Map_elem(x, y) != '.')
 		{
-			x = rand() % 127;
-			y = rand() % 29;
+			x = rand() % test_map.Width();
+			y = rand() % test_map.Height();
 		}
 		Z[i].asPlace(x, y, test_map);
 		All_Char.push_back(&Z[i]);
@@ -68,8 +67,8 @@ void choice_position_monsters()
 		y = 0;
 		while (test_map.Map_elem(x, y) != '.')
 		{
-			x = rand() % 127;
-			y = rand() % 29;
+			x = rand() % test_map.Width();
+			y = rand() % test_map.Height();
 		}
 		D[i].asPlace(x, y, test_map);
 		All_Char.push_back(&D[i]);

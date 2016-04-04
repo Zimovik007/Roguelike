@@ -6,12 +6,37 @@
 
 #include "map.h"
 
-Map::Map(int w1, int h1)
+Map::Map()
 {
+	int size = 0;
 	char c;
-	height = h1;
-	width = w1;
-	FILE* fin = fopen("map", "r");
+	FILE* fin;
+	width = 0;
+	//Задача узнать количество строк и столцов
+	fin = fopen("map", "r");
+	fscanf(fin, "%c", &c);
+	while ((c != '\n') && (c != feof(fin)))
+	{
+		width++;
+		fscanf(fin, "%c", &c);		
+	}
+	size = width;
+	while (!feof(fin))
+	{
+		
+		if (c != '\n')
+			size++;
+		fscanf(fin, "%c", &c);
+	}
+	height = size / width;
+	fclose(fin);
+	
+	map = new char*[height];
+	for (int i = 0; i < height; i++)
+		map[i] = new char[width];
+	
+	//
+	fin = fopen("map", "r");
 	for (int i = 0; i < height; i++)
 	{
 		for (int j = 0; j < width; j++)
@@ -38,12 +63,17 @@ void Map::Change(int x1, int y1, int x2, int y2)
 	map[y2][x2] = '.';
 }
 
-int Map::Blocked(int x, int y)
-{
-	return (map[y][x] != '.');
-}
-
 char Map::Map_elem(int x, int y)
 {
 	return map[y][x];
+}
+
+int Map::Height()
+{
+	return height;
+}
+
+int Map::Width()
+{
+	return width;
 }
