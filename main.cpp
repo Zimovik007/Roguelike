@@ -7,7 +7,7 @@
 #include "map.h"
 #include "char.h"
 
-#define Z_num 50
+#define Z_num 80
 #define D_num 10
 
 int i;
@@ -81,13 +81,15 @@ int main()
 {
 	All_Char.push_back(&K);
 	All_Char.push_back(&P);
+	
 	choice_position_monsters();
 	
+	test_map.display();
 	while (!GameOver())
 	{
-		test_map.display();
 		std::cout << "Health: " << K.HitPoints() << std::endl;
-		NextMove();		
+		NextMove();
+		test_map.display();		
 	}
 	return 0;
 }
