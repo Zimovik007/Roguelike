@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdlib.h>
 #include <vector>
+#include <cstring>
 
 #include "map.h"
 
@@ -48,7 +49,12 @@ void Map::display()
 {
 	for (int i = 0; i < height; i++, printf("\n"))
 		for (int j = 0; j < width; j++)
+		{
+			if (map[i][j] == 'P'){std::cout << "\033[0;32m" << map[i][j] << "\033[0m"; continue;}
+			if (map[i][j] == 'K'){std::cout << "\033[0;33m" << map[i][j] << "\033[0m"; continue;}
+			if (map[i][j] == '#'){std::cout << "\033[0;37m" << map[i][j] << "\033[0m"; continue;}
 			std::cout << map[i][j];
+		}	
 }
 
 void Map::Create_Char(int x, int y, char c)
