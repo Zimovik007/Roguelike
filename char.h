@@ -8,7 +8,7 @@
 class Character
 {	
 public:
-	virtual void Move(Map &m, std::vector<Character*> All) = 0;
+	virtual void Move(Map &m, std::vector<Character*> &All) = 0;
 	virtual int Damage(int dam);
 	virtual int HitPoints();
 	virtual int cntDamage();
@@ -25,7 +25,7 @@ class Princess : public Character
 {
 public:
 	Princess(int x, int y, Map &m);
-	void Move(Map &m, std::vector<Character*> All);
+	void Move(Map &m, std::vector<Character*> &All);
 };
 
 class Knight : public Character
@@ -33,7 +33,7 @@ class Knight : public Character
 public:
 	Knight(int x, int y, Map &m);
 	int Winner();
-	void Move(Map &m, std::vector<Character*> All);
+	void Move(Map &m, std::vector<Character*> &All);
 	int CheckWin(Princess P);
 protected:
 	int win;
@@ -42,7 +42,7 @@ protected:
 class Monster : public Character
 {
 public:
-	void Move(Map &m, std::vector<Character*> All);
+	void Move(Map &m, std::vector<Character*> &All);
 };
 
 class Zombie : public Monster

@@ -89,7 +89,7 @@ int Character::cntDamage()
 	return damage;
 }
 
-void Knight::Move(Map &m, std::vector<Character*> All)
+void Knight::Move(Map &m, std::vector<Character*> &All)
 {
 	int i, tx, ty, changed = 0;
 	char c;
@@ -127,6 +127,7 @@ void Knight::Move(Map &m, std::vector<Character*> All)
 					All.erase(All.begin() + i);
 					m.Change(tx, ty, posX, posY);
 					changed = 1;
+					break;
 				}						
 		}
 	 
@@ -134,12 +135,12 @@ void Knight::Move(Map &m, std::vector<Character*> All)
 	if (changed){posX = tx; posY = ty;}
 }
 
-void Princess::Move(Map &m, std::vector<Character*> All)
+void Princess::Move(Map &m, std::vector<Character*> &All)
 {
 	
 }
 
-void Monster::Move(Map &m, std::vector<Character*> All)
+void Monster::Move(Map &m, std::vector<Character*> &All)
 {
 	int changed = 0;
 	int tx, ty, i;
@@ -167,6 +168,7 @@ void Monster::Move(Map &m, std::vector<Character*> All)
 					All.erase(All.begin() + i);
 					m.Change(tx, ty, posX, posY);
 					changed = 1;
+					break;
 				}
 			}
 		}	
