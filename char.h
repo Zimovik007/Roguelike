@@ -15,6 +15,7 @@ public:
 	virtual int PosX();
 	virtual int PosY();
 	virtual int Level();
+	virtual void Find_x_y(Map &m);
 protected:
 	int health;
 	int damage;
@@ -52,7 +53,7 @@ public:
 class Zombie : public Monster
 {
 public:
-	Zombie();
+	Zombie(Map &m);
 	Zombie(int x, int y, Map &m);
 	void asPlace(int x, int y, Map &m);
 };
@@ -60,7 +61,7 @@ public:
 class Dragon : public Monster
 {
 public:
-	Dragon();
+	Dragon(Map &m);
 	Dragon(int x, int y, Map &m);
 	void asPlace(int x, int y, Map &m);
 };

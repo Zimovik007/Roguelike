@@ -16,10 +16,10 @@ Knight::Knight(Map &m)
 		x = rand() % m.Width();
 		y = rand() % m.Height();
 	}
-	health = 100;
-	damage = 10;
 	posX = x;
 	posY = y;
+	health = 100;
+	damage = 10;
 	win = 0;
 	level = 0;
 	mob_to_next_level = 3;
@@ -40,10 +40,10 @@ Princess::Princess(Map &m)
 		x = rand() % m.Width();
 		y = rand() % m.Height();
 	}
-	health = 100;
-	damage = 0;
 	posX = x;
 	posY = y;
+	health = 100;
+	damage = 0;
 	m.Create_Char(x, y, 'P');
 }
 
@@ -56,12 +56,25 @@ Zombie::Zombie(int x, int y, Map &m)
 	m.Create_Char(x, y, 'Z');
 }
 
-Zombie::Zombie()
+void Character::Find_x_y(Map &m)
 {
+	int x = rand() % m.Width();
+	int y = rand() % m.Height();
+	while (m.Map_elem(x, y) != '.')
+	{
+		x = rand() % m.Width();
+		y = rand() % m.Height();
+	}
+	posX = x;
+	posY = y;
+}
+
+Zombie::Zombie(Map &m)
+{
+	Find_x_y(m);
 	health = 20;
 	damage = 10;
-	posX = -1;
-	posY = -1;
+	m.Create_Char(posX, posY, 'Z');
 }
 
 void Zombie::asPlace(int x, int y, Map &m)
@@ -80,12 +93,12 @@ Dragon::Dragon(int x, int y, Map &m)
 	m.Create_Char(x, y, 'D');
 }
 
-Dragon::Dragon()
+Dragon::Dragon(Map &m)
 {
+	Find_x_y(m);
 	health = 100;
 	damage = 25;
-	posX = -1;
-	posY = -1;
+	m.Create_Char(posX, posY, 'D');
 }
 
 void Dragon::asPlace(int x, int y, Map &m)
