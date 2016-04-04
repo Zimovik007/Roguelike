@@ -33,18 +33,10 @@ int Knight::Winner()
 
 Princess::Princess(Map &m)
 {
-	int x = rand() % m.Width();
-	int y = rand() % m.Height();
-	while (m.Map_elem(x, y) != '.')
-	{
-		x = rand() % m.Width();
-		y = rand() % m.Height();
-	}
-	posX = x;
-	posY = y;
+	Find_x_y(m);
 	health = 100;
 	damage = 0;
-	m.Create_Char(x, y, 'P');
+	m.Create_Char(posX, posY, 'P');
 }
 
 Zombie::Zombie(int x, int y, Map &m)
