@@ -9,21 +9,13 @@
 
 Knight::Knight(Map &m)
 {
-	int x = rand() % m.Width();
-	int y = rand() % m.Height();
-	while (m.Map_elem(x, y) != '.')
-	{
-		x = rand() % m.Width();
-		y = rand() % m.Height();
-	}
-	posX = x;
-	posY = y;
+	Find_x_y(m);
 	health = 100;
 	damage = 10;
 	win = 0;
 	level = 0;
 	mob_to_next_level = 3;
-	m.Create_Char(x, y, 'K');
+	m.Create_Char(posX, posY, 'K');
 }
 
 int Knight::Winner()
