@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <cmath>
 #include <vector>
+#include <ctime>
 
 #include "map.h"
 #include "char.h"
@@ -11,11 +12,9 @@ int i;
 int Z_num = 40;
 int D_num = 10;
 Map test_map;
-Knight K(test_map);
-Princess P(test_map);
 std::vector<Character*> All_Char;
 
-int GameOver()
+int GameOver(Knight K, Princess P)
 {
 	if (K.Winner())
 	{
@@ -42,12 +41,15 @@ void NextMove()
 
 int main()
 {
+	srand(time(0));
 	int difficult;
 	std::cout << "1 Легкий, 2 Средний, 3 Сложный" << std::endl;
 	std::cin >> difficult;
 	if (difficult == 2){Z_num *= 2; D_num *= 2;}
 	if (difficult == 3){Z_num *= 3; D_num *= 3;}
 	
+	Knight K(test_map);
+	Princess P(test_map);
 	All_Char.push_back(&K);
 	All_Char.push_back(&P);	
 	Zombie *Z = (Zombie*)operator new(sizeof(Zombie) * Z_num);
@@ -64,7 +66,7 @@ int main()
 	}
 	
 	test_map.display();
-	while (!GameOver())
+	while (!GameOver(K, P))
 	{
 		std::cout << "Knight-Health: " << K.HitPoints() 
 		          << "  |  Princess-Health: " <<P.HitPoints() 

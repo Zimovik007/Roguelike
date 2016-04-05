@@ -123,6 +123,7 @@ void Knight::Move(Map &m, std::vector<Character*> &All)
 		if (c == 's') {tx = posX; ty = posY + 1; good_char = 0;}
 		if (c == 'a') {tx = posX - 1; ty = posY; good_char = 0;}
 		if (c == 'd') {tx = posX + 1; ty = posY; good_char = 0;}
+		if (c == 't') {return;}
 	}
 	c = m.Map_elem(tx, ty);
 	
