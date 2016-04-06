@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <ctime>
+#include <ncurses.h>
 
 #include "map.h"
 #include "char.h"
@@ -18,16 +19,18 @@ int GameOver(Knight K, Princess P)
 {
 	if (K.Winner())
 	{
-		std::cout << "Knight WIN!" << std::endl;
+		erase();
+		printw("Knight Win!\n");
 		return 1;
 	}
 	if ((K.HitPoints() <= 0) || (P.HitPoints() <= 0))
 	{
-		std::cout << "Game over. ";
+		erase();
+		printw("Game Over. ");
 		if (K.HitPoints() <= 0)
-			std::cout << "Knight dead!" << std::endl;
+			printw("Knight Dead!\n");
 		else
-			std::cout << "Princess dead!" << std::endl;
+			printw("Princess Dead!\n");
 		return 1;
 	}
 	return 0;
@@ -41,12 +44,16 @@ void NextMove()
 
 int main()
 {
+	initscr();
+	start_color();
+	keypad(stdscr, TRUE);
+	noecho();
 	srand(time(0));
 	int difficult;
-	std::cout << "1 Легкий, 2 Средний, 3 Сложный" << std::endl;
-	std::cin >> difficult;
-	if (difficult == 2){Z_num *= 2; D_num *= 2;}
-	if (difficult == 3){Z_num *= 3; D_num *= 3;}
+	printw("1 легкий, 2 средний, 3 сложный\n");
+	difficult = getch();
+	if (difficult == '2'){Z_num *= 2; D_num *= 2;}
+	if (difficult == '3'){Z_num *= 3; D_num *= 3;}
 	
 	Knight K(test_map);
 	Princess P(test_map);
@@ -68,13 +75,12 @@ int main()
 	test_map.display();
 	while (!GameOver(K, P))
 	{
-		std::cout << "Knight-Health: " << K.HitPoints() 
-		          << "  |  Princess-Health: " <<P.HitPoints() 
-		          << "  |  Enemies: " << All_Char.size() - 2 
-		          << "  |  Level: " << All_Char[0]->Level() 
-		          << std::endl;
+		printw("Knight-Health: %d; Princess-Health: %d; Enemies: %d; Level: %d;\n", K.HitPoints(), P.HitPoints(), All_Char.size() - 2, All_Char[0]->Level());
 		NextMove();
+		erase();
 		test_map.display();		
 	}
+	while (1){char c; c = getch(); if (c == 'q') break;}
+	endwin();
 	return 0;
 }

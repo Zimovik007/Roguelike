@@ -3,6 +3,8 @@
 #include <cmath>
 #include <stdlib.h>
 #include <vector>
+#include <string>
+#include <ncurses.h>
 
 #include "char.h"
 
@@ -118,7 +120,7 @@ void Knight::Move(Map &m, std::vector<Character*> &All)
 	
 	while (good_char)
 	{
-		std::cin >> c;
+		c = getch();
 		if (c == 'w') {tx = posX; ty = posY - 1; good_char = 0;}
 		if (c == 's') {tx = posX; ty = posY + 1; good_char = 0;}
 		if (c == 'a') {tx = posX - 1; ty = posY; good_char = 0;}
