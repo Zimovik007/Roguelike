@@ -42,18 +42,31 @@ void NextMove()
 		All_Char[i]->Move(test_map, All_Char);
 }
 
-int main()
+void diff_level()
 {
-	initscr();
-	start_color();
-	keypad(stdscr, TRUE);
-	noecho();
-	srand(time(0));
 	int difficult;
 	printw("1 легкий, 2 средний, 3 сложный\n");
 	difficult = getch();
 	if (difficult == '2'){Z_num *= 2; D_num *= 2;}
 	if (difficult == '3'){Z_num *= 3; D_num *= 3;}
+}
+
+void init_ncurses()
+{
+	initscr();
+	start_color();
+	keypad(stdscr, TRUE);
+	noecho();
+	init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(2, COLOR_BLUE, COLOR_BLACK);
+}
+
+int main()
+{
+	srand(time(0));
+	
+	init_ncurses();
+	diff_level();	
 	
 	Knight K(test_map);
 	Princess P(test_map);
