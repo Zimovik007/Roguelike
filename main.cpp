@@ -45,10 +45,11 @@ void NextMove()
 void diff_level()
 {
 	int difficult;
-	printw("1 легкий, 2 средний, 3 сложный\n");
+	printw("1 Easy, 2 Medium, 3 Hard, 4 HELL!!!\n");
 	difficult = getch();
 	if (difficult == '2'){Z_num *= 2; D_num *= 2;}
 	if (difficult == '3'){Z_num *= 3; D_num *= 3;}
+	if (difficult == '4'){Z_num *= 4; D_num *= 4;}
 }
 
 void init_ncurses()

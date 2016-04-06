@@ -51,12 +51,11 @@ void Map::display()
 	for (int i = 0; i < height; i++, printw("\n"))
 		for (int j = 0; j < width; j++)
 		{
-			/*if (map[i][j] == 'P'){std::cout << "\033[0;32m" << map[i][j] << "\033[0m"; continue;}
-			if (map[i][j] == 'K'){std::cout << "\033[0;33m" << map[i][j] << "\033[0m"; continue;}
-			if (map[i][j] == '#'){std::cout << "\033[0;37m" << map[i][j] << "\033[0m"; continue;}
-			std::cout << map[i][j];*/
 			if (map[i][j] == 'K'){attron(COLOR_PAIR(1)); addch(map[i][j]); attroff(COLOR_PAIR(1));}
-			else if (map[i][j] == 'P'){attron(COLOR_PAIR(2)); addch(map[i][j]); attroff(COLOR_PAIR(2));}
+			else 
+			if (map[i][j] == 'P'){attron(COLOR_PAIR(2)); addch(map[i][j]); attroff(COLOR_PAIR(2));}
+			else
+			if (map[i][j] == '#'){attron(A_BOLD); addch(map[i][j]); attroff(A_BOLD);}
 			else
 				addch(map[i][j]);
 		}	
