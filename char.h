@@ -8,60 +8,60 @@
 class Character
 {	
 public:
-	virtual void Move(Map &m, std::vector<Character*> &All) = 0;
-	virtual int Damage(int dam);
-	virtual int HitPoints();
-	virtual int cntDamage();
-	virtual int PosX();
-	virtual int PosY();
-	virtual int Level();
-	virtual void Find_x_y(Map &m);
+	virtual void move(Map &M, std::vector<Character*> &All) = 0;
+	virtual void find_x_y(Map &M);
+	virtual int damage(int Dam);
+	virtual int hit_points();
+	virtual int cnt_damage();
+	virtual int pos_x();
+	virtual int pos_y();
 protected:
-	int health;
-	int damage;
-	int posX;
-	int posY;
-	int level;
+	int Health;
+	int Damage;
+	int Pos_x;
+	int Pos_y;
 };
 
 class Princess : public Character
 {
 public:
-	Princess(Map &m);
-	void Move(Map &m, std::vector<Character*> &All);
+	Princess(Map &M);
+	void move(Map &M, std::vector<Character*> &All);
 };
 
 class Knight : public Character
 {
 public:
-	Knight(Map &m);
-	int Winner();
-	void Move(Map &m, std::vector<Character*> &All);
-	int CheckWin(Princess P);
-	void LevelUp();
+	Knight(Map &M);
+	int winner();
+	void move(Map &M, std::vector<Character*> &All);
+	int check_win(Princess P);
+	void level_up();
+	int level();
 protected:
-	int win;
-	int mob_to_next_level;
+	int Level;
+	int Win;
+	int Mob_to_next_level;
 };
 
 class Monster : public Character
 {
 public:
-	void Move(Map &m, std::vector<Character*> &All);
+	void move(Map &M, std::vector<Character*> &All);
 };
 
 class Zombie : public Monster
 {
 public:
-	Zombie(Map &m);
-	Zombie(int x, int y, Map &m);
-	void asPlace(int x, int y, Map &m);
+	Zombie(Map &M);
+	Zombie(int X, int Y, Map &M);
+	void as_place(int X, int Y, Map &M);
 };
 
 class Dragon : public Monster
 {
 public:
-	Dragon(Map &m);
-	Dragon(int x, int y, Map &m);
-	void asPlace(int x, int y, Map &m);
+	Dragon(Map &M);
+	Dragon(int X, int Y, Map &M);
+	void as_place(int X, int Y, Map &M);
 };

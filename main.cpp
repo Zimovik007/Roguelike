@@ -12,22 +12,22 @@
 int i;
 int Z_num = 40;
 int D_num = 10;
-Map test_map;
-std::vector<Character*> All_Char;
+Map Test_map;
+std::vector<Character*> All_char;
 
-int GameOver(Knight K, Princess P)
+int game_over(Knight K, Princess P)
 {
-	if (K.Winner())
+	if (K.winner())
 	{
 		erase();
 		printw("Knight Win!\n");
 		return 1;
 	}
-	if ((K.HitPoints() <= 0) || (P.HitPoints() <= 0))
+	if ((K.hit_points() <= 0) || (P.hit_points() <= 0))
 	{
 		erase();
 		printw("Game Over. ");
-		if (K.HitPoints() <= 0)
+		if (K.hit_points() <= 0)
 			printw("Knight Dead!\n");
 		else
 			printw("Princess Dead!\n");
@@ -36,20 +36,20 @@ int GameOver(Knight K, Princess P)
 	return 0;
 }
 
-void NextMove()
+void next_move()
 {
-	for (int i = 0; i < All_Char.size(); i++)
-		All_Char[i]->Move(test_map, All_Char);
+	for (int i = 0; i < All_char.size(); i++)
+		All_char[i]->move(Test_map, All_char);
 }
 
 void diff_level()
 {
-	int difficult;
+	int Difficult;
 	printw("1 Easy, 2 Medium, 3 Hard, 4 HELL!!!\n");
-	difficult = getch();
-	if (difficult == '2'){Z_num *= 2; D_num *= 2;}
-	if (difficult == '3'){Z_num *= 3; D_num *= 3;}
-	if (difficult == '4'){Z_num *= 4; D_num *= 4;}
+	Difficult = getch();
+	if (Difficult == '2'){Z_num *= 2; D_num *= 2;}
+	if (Difficult == '3'){Z_num *= 3; D_num *= 3;}
+	if (Difficult == '4'){Z_num *= 4; D_num *= 4;}
 }
 
 void init_ncurses()
@@ -69,32 +69,32 @@ int main()
 	init_ncurses();
 	diff_level();	
 	
-	Knight K(test_map);
-	Princess P(test_map);
-	All_Char.push_back(&K);
-	All_Char.push_back(&P);	
+	Knight K(Test_map);
+	Princess P(Test_map);
+	All_char.push_back(&K);
+	All_char.push_back(&P);	
 	Zombie *Z = (Zombie*)operator new(sizeof(Zombie) * Z_num);
 	for (int i = 0 ; i < Z_num; i++)
 	{
-		new(&Z[i])Zombie(test_map);
-		All_Char.push_back(&Z[i]);
+		new(&Z[i])Zombie(Test_map);
+		All_char.push_back(&Z[i]);
 	}	
 	Dragon *D = (Dragon*)operator new(sizeof(Dragon) * D_num);
 	for (int i = 0 ; i < D_num; i++)
 	{
-		new(&D[i])Dragon(test_map);
-		All_Char.push_back(&D[i]);
+		new(&D[i])Dragon(Test_map);
+		All_char.push_back(&D[i]);
 	}
 	
-	test_map.display();
-	while (!GameOver(K, P))
+	Test_map.display();
+	while (!game_over(K, P))
 	{
-		printw("Knight-Health: %d; Princess-Health: %d; Enemies: %d; Level: %d;\n", K.HitPoints(), P.HitPoints(), All_Char.size() - 2, All_Char[0]->Level());
-		NextMove();
+		printw("Knight-Health: %d; Princess-Health: %d; Enemies: %d; Level: %d;\n", K.hit_points(), P.hit_points(), All_char.size() - 2, K.level());
+		next_move();
 		erase();
-		test_map.display();		
+		Test_map.display();		
 	}
-	while (1){char c; c = getch(); if (c == 'q') break;}
+	while (getch() != 'q'){}
 	endwin();
 	return 0;
 }

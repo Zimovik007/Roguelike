@@ -3,15 +3,15 @@
 class Map
 {
 private:
-	int height;
-	int width;
-	char **map;
+	int Height;
+	int Width;
+	char **Map_data;
 public:
 	Map();
 	void display();
-	void Create_Char(int x, int y, char c);
-	void Change(int x1, int y1, int x2, int y2);
-	char Map_elem(int x, int y);
-	int Height();
-	int Width();
+	void create_char(int X, int Y, char c);
+	void change(int X1, int Y1, int X2, int Y2);
+	char map_elem(int X, int Y);
+	int height();
+	int width();
 };

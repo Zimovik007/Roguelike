@@ -10,79 +10,79 @@
 
 Map::Map()
 {
-	int size = 0;
+	int Size = 0;
 	char c;
-	FILE* fin;
-	width = 0;
+	FILE* Fin;
+	Width = 0;
 	//Задача узнать количество строк и столцов
-	fin = fopen("map", "r");
-	fscanf(fin, "%c", &c);
-	while ((c != '\n') && (c != feof(fin)))
+	Fin = fopen("map", "r");
+	fscanf(Fin, "%c", &c);
+	while ((c != '\n') && (c != feof(Fin)))
 	{
-		width++;
-		fscanf(fin, "%c", &c);		
+		Width++;
+		fscanf(Fin, "%c", &c);		
 	}
-	size = width;
-	while (!feof(fin))
+	Size = Width;
+	while (!feof(Fin))
 	{
 		if (c != '\n')
-			size++;
-		fscanf(fin, "%c", &c);
+			Size++;
+		fscanf(Fin, "%c", &c);
 	}
-	height = size / width;
-	fclose(fin);
+	Height = Size / Width;
+	fclose(Fin);
 	
-	map = new char*[height];
-	for (int i = 0; i < height; i++)
-		map[i] = new char[width];
+	Map_data = new char*[Height];
+	for (int i = 0; i < Height; i++)
+		Map_data[i] = new char[Width];
 	
 	//
-	fin = fopen("map", "r");
-	for (int i = 0; i < height; i++)
+	Fin = fopen("map", "r");
+	for (int i = 0; i < Height; i++)
 	{
-		for (int j = 0; j < width; j++)
-			fscanf(fin, "%c", &map[i][j]);
-		fscanf(fin, "%c", &c);
+		for (int j = 0; j < Width; j++)
+			fscanf(Fin, "%c", &Map_data[i][j]);
+		fscanf(Fin, "%c", &c);
 	}	
 }
 
 void Map::display()
 {
-	for (int i = 0; i < height; i++, printw("\n"))
-		for (int j = 0; j < width; j++)
+	for (int i = 0; i < Height; i++, printw("\n"))
+		for (int j = 0; j < Width; j++)
 		{
-			if (map[i][j] == 'K'){attron(COLOR_PAIR(1)); addch(map[i][j]); attroff(COLOR_PAIR(1));}
+			if (Map_data[i][j] == 'K'){attron(COLOR_PAIR(1)); addch(Map_data[i][j]); attroff(COLOR_PAIR(1));}
 			else 
-			if (map[i][j] == 'P'){attron(COLOR_PAIR(2)); addch(map[i][j]); attroff(COLOR_PAIR(2));}
+			if (Map_data[i][j] == 'P'){attron(COLOR_PAIR(2)); addch(Map_data[i][j]); attroff(COLOR_PAIR(2));}
 			else
-			if (map[i][j] == '#'){attron(A_BOLD); addch(map[i][j]); attroff(A_BOLD);}
+			if (Map_data[i][j] == '#'){attron(A_BOLD); addch(Map_data[i][j]); attroff(A_BOLD);}
 			else
-				addch(map[i][j]);
+				addch(Map_data[i][j]);
 		}	
 }
 
-void Map::Create_Char(int x, int y, char c)
+void Map::create_char(int X, int Y, char c)
 {
-	map[y][x] = c;
+	Map_data[Y][X] = c;
 }
 
-void Map::Change(int x1, int y1, int x2, int y2)
+void Map::change(int X1, int Y1, int X2, int Y2)
 {
-	map[y1][x1] = map[y2][x2];
-	map[y2][x2] = '.';
+	Map_data[Y1][X1] = Map_data[Y2][X2];
+	Map_data[Y2][X2] = '.';
 }
 
-char Map::Map_elem(int x, int y)
+char Map::map_elem(int X, int Y)
 {
-	return map[y][x];
+	return Map_data[Y][X];
 }
 
-int Map::Height()
+int Map::height()
 {
-	return height;
+	return Height;
 }
 
-int Map::Width()
+int Map::width()
 {
-	return width;
+	return Width;
 }
