@@ -7,6 +7,7 @@
 #include <ncurses.h>
 
 #include "map.h"
+#include "char.h"
 
 Map::Map()
 {
@@ -61,9 +62,24 @@ void Map::display()
 		}	
 }
 
+int Map::vec_size()
+{
+	return Chars.size();
+}
+
+void Map::vec_erase(int i)
+{
+	Chars.erase(Chars.begin() + i);
+}
+
 void Map::create_char(int X, int Y, char c)
 {
 	Map_data[Y][X] = c;
+}
+
+Character* Map::select_char(int i)
+{
+	return Chars[i];
 }
 
 void Map::change(int X1, int Y1, int X2, int Y2)
@@ -75,6 +91,11 @@ void Map::change(int X1, int Y1, int X2, int Y2)
 char Map::map_elem(int X, int Y)
 {
 	return Map_data[Y][X];
+}
+
+void Map::add_to_vector(Character* address)
+{
+	Chars.push_back(address);
 }
 
 int Map::height()

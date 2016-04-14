@@ -7,7 +7,7 @@
 #include <ncurses.h>
 
 #include "char.h"
-
+#include "map.h"
 
 Knight::Knight(Map &M)
 {
@@ -17,7 +17,8 @@ Knight::Knight(Map &M)
 	Win = 0;
 	Level = 0;
 	Mob_to_next_level = 3;
-	M.create_char(Pos_x, Pos_y, 'K');
+	M.create_char(Pos_x, Pos_y, 'K');	
+	M.add_to_vector(this);
 }
 
 int Knight::winner()
@@ -30,7 +31,8 @@ Princess::Princess(Map &M)
 	find_x_y(M);
 	Health = 100;
 	Damage = 0;
-	M.create_char(Pos_x, Pos_y, 'P');
+	M.create_char(Pos_x, Pos_y, 'P');	
+	M.add_to_vector(this);
 }
 
 Zombie::Zombie(int X, int Y, Map &M)
@@ -39,7 +41,8 @@ Zombie::Zombie(int X, int Y, Map &M)
 	Damage = 10;
 	Pos_x = X;
 	Pos_y = Y;
-	M.create_char(X, Y, 'Z');
+	M.create_char(X, Y, 'Z');	
+	M.add_to_vector(this);
 }
 
 void Character::find_x_y(Map &M)
@@ -70,6 +73,7 @@ Zombie::Zombie(Map &M)
 	Health = 20;
 	Damage = 10;
 	M.create_char(Pos_x, Pos_y, 'Z');
+	M.add_to_vector(this);
 }
 
 void Zombie::as_place(int X, int Y, Map &M)
@@ -85,7 +89,8 @@ Dragon::Dragon(int X, int Y, Map &M)
 	Damage = 25;
 	Pos_x = X;
 	Pos_y = Y;
-	M.create_char(X, Y, 'D');
+	M.create_char(X, Y, 'D');	
+	M.add_to_vector(this);
 }
 
 Dragon::Dragon(Map &M)
@@ -94,6 +99,7 @@ Dragon::Dragon(Map &M)
 	Health = 100;
 	Damage = 25;
 	M.create_char(Pos_x, Pos_y, 'D');
+	M.add_to_vector(this);
 }
 
 void Dragon::as_place(int X, int Y, Map &M)
@@ -121,7 +127,7 @@ void Knight::level_up()
 	Mob_to_next_level = 3 + Level;
 }
 
-void Knight::move(Map &M, std::vector<Character*> &All)
+void Knight::move(Map &M)
 {
 	int i, Tx, Ty, Changed = 0;
 	char c;
@@ -152,12 +158,12 @@ void Knight::move(Map &M, std::vector<Character*> &All)
 	}
 	else if (c != '#')
 	{
-		for (i = 2; i < All.size(); i++)
+		for (i = 2; i < M.vec_size(); i++)
 		{
-			if ((All[i]->pos_x() == Tx) && (All[i]->pos_y() == Ty))
-				if (All[i]->damage(cnt_damage()))
+			if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
+				if (M.select_char(i)->damage(cnt_damage()))
 				{
-					All.erase(All.begin() + i);
+					M.vec_erase(i);
 					M.change(Tx, Ty, Pos_x, Pos_y);
 					Mob_to_next_level--;
 					if (!Mob_to_next_level)
@@ -171,12 +177,12 @@ void Knight::move(Map &M, std::vector<Character*> &All)
 	if (Changed){Pos_x = Tx; Pos_y = Ty;}
 }
 
-void Princess::move(Map &M, std::vector<Character*> &All)
+void Princess::move(Map &M)
 {
 	
 }
 
-void Monster::move(Map &M, std::vector<Character*> &All)
+void Monster::move(Map &M)
 {
 	int Changed = 0;
 	int Tx, Ty, i;
@@ -197,11 +203,11 @@ void Monster::move(Map &M, std::vector<Character*> &All)
 	{
 		for (i = 0; i < 2; i++)
 		{
-			if ((All[i]->pos_x() == Tx) && (All[i]->pos_y() == Ty))
+			if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
 			{
-				if (All[i]->damage(cnt_damage()))
+				if (M.select_char(i)->damage(cnt_damage()))
 				{
-					All.erase(All.begin() + i);
+					M.vec_erase(i);
 					M.change(Tx, Ty, Pos_x, Pos_y);
 					Changed = 1;
 					break;

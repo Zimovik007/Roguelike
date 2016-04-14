@@ -13,7 +13,6 @@ int i;
 int Z_num = 40;
 int D_num = 10;
 Map Test_map;
-std::vector<Character*> All_char;
 
 int game_over(Knight K, Princess P)
 {
@@ -38,8 +37,8 @@ int game_over(Knight K, Princess P)
 
 void next_move()
 {
-	for (int i = 0; i < All_char.size(); i++)
-		All_char[i]->move(Test_map, All_char);
+	for (int i = 0; i < Test_map.vec_size(); i++)
+		Test_map.select_char(i)->move(Test_map);
 }
 
 void diff_level()
@@ -71,25 +70,17 @@ int main()
 	
 	Knight K(Test_map);
 	Princess P(Test_map);
-	All_char.push_back(&K);
-	All_char.push_back(&P);	
 	Zombie *Z = (Zombie*)operator new(sizeof(Zombie) * Z_num);
 	for (int i = 0 ; i < Z_num; i++)
-	{
 		new(&Z[i])Zombie(Test_map);
-		All_char.push_back(&Z[i]);
-	}	
 	Dragon *D = (Dragon*)operator new(sizeof(Dragon) * D_num);
 	for (int i = 0 ; i < D_num; i++)
-	{
 		new(&D[i])Dragon(Test_map);
-		All_char.push_back(&D[i]);
-	}
 	
 	Test_map.display();
 	while (!game_over(K, P))
 	{
-		printw("Knight-Health: %d; Princess-Health: %d; Enemies: %d; Level: %d;\n", K.hit_points(), P.hit_points(), All_char.size() - 2, K.level());
+		printw("Knight-Health: %d; Princess-Health: %d; Enemies: %d; Level: %d;\n", K.hit_points(), P.hit_points(), Test_map.vec_size() - 2, K.level());
 		next_move();
 		erase();
 		Test_map.display();		
