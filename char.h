@@ -55,7 +55,6 @@ class Zombie : public Monster
 public:
 	Zombie(Map &M);
 	Zombie(int X, int Y, Map &M);
-	void as_place(int X, int Y, Map &M);
 };
 
 class Dragon : public Monster
@@ -63,5 +62,4 @@ class Dragon : public Monster
 public:
 	Dragon(Map &M);
 	Dragon(int X, int Y, Map &M);
-	void as_place(int X, int Y, Map &M);
 };

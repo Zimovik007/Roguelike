@@ -9,41 +9,7 @@
 #include "char.h"
 #include "map.h"
 
-Knight::Knight(Map &M)
-{
-	find_x_y(M);
-	Health = 100;
-	Damage = 10;
-	Win = 0;
-	Level = 0;
-	Mob_to_next_level = 3;
-	M.create_char(Pos_x, Pos_y, 'K');	
-	M.add_to_vector(this);
-}
-
-int Knight::winner()
-{
-	return Win;
-}
-
-Princess::Princess(Map &M)
-{
-	find_x_y(M);
-	Health = 100;
-	Damage = 0;
-	M.create_char(Pos_x, Pos_y, 'P');	
-	M.add_to_vector(this);
-}
-
-Zombie::Zombie(int X, int Y, Map &M)
-{
-	Health = 20;
-	Damage = 10;
-	Pos_x = X;
-	Pos_y = Y;
-	M.create_char(X, Y, 'Z');	
-	M.add_to_vector(this);
-}
+//CHARACTER
 
 void Character::find_x_y(Map &M)
 {
@@ -63,50 +29,9 @@ void Character::find_x_y(Map &M)
 			{
 				Pos_x = j;
 				Pos_y = i;
+				return;
 			}
 		}
-}
-
-Zombie::Zombie(Map &M)
-{
-	find_x_y(M);
-	Health = 20;
-	Damage = 10;
-	M.create_char(Pos_x, Pos_y, 'Z');
-	M.add_to_vector(this);
-}
-
-void Zombie::as_place(int X, int Y, Map &M)
-{
-	Pos_x = X;
-	Pos_y = Y;
-	M.create_char(X, Y, 'Z');
-}
-
-Dragon::Dragon(int X, int Y, Map &M)
-{
-	Health = 100;
-	Damage = 25;
-	Pos_x = X;
-	Pos_y = Y;
-	M.create_char(X, Y, 'D');	
-	M.add_to_vector(this);
-}
-
-Dragon::Dragon(Map &M)
-{
-	find_x_y(M);
-	Health = 100;
-	Damage = 25;
-	M.create_char(Pos_x, Pos_y, 'D');
-	M.add_to_vector(this);
-}
-
-void Dragon::as_place(int X, int Y, Map &M)
-{
-	Pos_x = X;
-	Pos_y = Y;
-	M.create_char(X, Y, 'D');
 }
 
 int Character::hit_points()
@@ -117,6 +42,36 @@ int Character::hit_points()
 int Character::cnt_damage()
 {
 	return Damage;
+}
+
+int Character::damage(int Dam)
+{
+	Health -= Dam;
+	return Health <= 0 ? 1 : 0;
+}
+
+int Character::pos_x()
+{
+	return Pos_x;
+}
+
+int Character::pos_y()
+{
+	return Pos_y;
+}
+
+//KNIGHT
+
+Knight::Knight(Map &M)
+{
+	find_x_y(M);
+	Health = 100;
+	Damage = 10;
+	Win = 0;
+	Level = 0;
+	Mob_to_next_level = 3;
+	M.create_char(Pos_x, Pos_y, 'K');	
+	M.add_to_vector(this);
 }
 
 void Knight::level_up()
@@ -177,10 +132,38 @@ void Knight::move(Map &M)
 	if (Changed){Pos_x = Tx; Pos_y = Ty;}
 }
 
+int Knight::winner()
+{
+	return Win;
+}
+
+int Knight::level()
+{
+	return Level;
+}
+
+int Knight::check_win(Princess P)
+{
+	return ((pos_x() == P.pos_x()) && (pos_y() == P.pos_y()));
+}
+
+//PRINCESS
+
+Princess::Princess(Map &M)
+{
+	find_x_y(M);
+	Health = 100;
+	Damage = 0;
+	M.create_char(Pos_x, Pos_y, 'P');	
+	M.add_to_vector(this);
+}
+
 void Princess::move(Map &M)
 {
 	
 }
+
+// MONSTER
 
 void Monster::move(Map &M)
 {
@@ -201,7 +184,7 @@ void Monster::move(Map &M)
 	}
 	else if ((c == 'K') || (c == 'P'))
 	{
-		for (i = 0; i < 2; i++)
+		for (i = 0; i < 1; i++)
 		{
 			if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
 			{
@@ -218,28 +201,49 @@ void Monster::move(Map &M)
 	if (Changed){Pos_x = Tx; Pos_y = Ty;}
 }
 
-int Character::damage(int Dam)
+// ZOMBIE
+
+Zombie::Zombie(int X, int Y, Map &M)
 {
-	Health -= Dam;
-	return Health <= 0 ? 1 : 0;
+	Health = 20;
+	Damage = 10;
+	Pos_x = X;
+	Pos_y = Y;
+	M.create_char(X, Y, 'Z');	
+	M.add_to_vector(this);
 }
 
-int Character::pos_x()
+Zombie::Zombie(Map &M)
 {
-	return Pos_x;
+	find_x_y(M);
+	Health = 20;
+	Damage = 10;
+	M.create_char(Pos_x, Pos_y, 'Z');
+	M.add_to_vector(this);
 }
 
-int Character::pos_y()
+// DRAGON
+
+Dragon::Dragon(int X, int Y, Map &M)
 {
-	return Pos_y;
+	Health = 100;
+	Damage = 25;
+	Pos_x = X;
+	Pos_y = Y;
+	M.create_char(X, Y, 'D');	
+	M.add_to_vector(this);
 }
 
-int Knight::level()
+Dragon::Dragon(Map &M)
 {
-	return Level;
+	find_x_y(M);
+	Health = 100;
+	Damage = 25;
+	M.create_char(Pos_x, Pos_y, 'D');
+	M.add_to_vector(this);
 }
 
-int Knight::check_win(Princess P)
-{
-	return ((pos_x() == P.pos_x()) && (pos_y() == P.pos_y()));
-}
+
+
+
+
