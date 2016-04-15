@@ -12,6 +12,7 @@
 int i;
 int Z_num = 40;
 int D_num = 10;
+int S_num = 1;
 Map Test_map;
 
 int game_over(Knight K, Princess P)
@@ -38,7 +39,8 @@ int game_over(Knight K, Princess P)
 void next_move()
 {
 	for (int i = 0; i < Test_map.vec_size(); i++)
-		Test_map.select_char(i)->move(Test_map);
+		if (Test_map.select_char(i)->move(Test_map))
+			Test_map.vec_erase(i);
 }
 
 void diff_level()
@@ -46,9 +48,9 @@ void diff_level()
 	int Difficult;
 	printw("1 Easy, 2 Medium, 3 Hard, 4 HELL!!!\n");
 	Difficult = getch();
-	if (Difficult == '2'){Z_num *= 2; D_num *= 2;}
-	if (Difficult == '3'){Z_num *= 3; D_num *= 3;}
-	if (Difficult == '4'){Z_num *= 4; D_num *= 4;}
+	if (Difficult == '2'){Z_num *= 2; D_num *= 2; S_num *= 2;}
+	if (Difficult == '3'){Z_num *= 3; D_num *= 3; S_num *= 3;}
+	if (Difficult == '4'){Z_num *= 4; D_num *= 4; S_num *= 4;}
 }
 
 void init_ncurses()
@@ -68,14 +70,17 @@ int main()
 	init_ncurses();
 	diff_level();	
 	
-	Knight K(Test_map);
 	Princess P(Test_map);
+	Knight K(Test_map);
 	Zombie *Z = (Zombie*)operator new(sizeof(Zombie) * Z_num);
 	for (int i = 0 ; i < Z_num; i++)
 		new(&Z[i])Zombie(Test_map);
 	Dragon *D = (Dragon*)operator new(sizeof(Dragon) * D_num);
 	for (int i = 0 ; i < D_num; i++)
 		new(&D[i])Dragon(Test_map);
+	Sorcerer *S = (Sorcerer*)operator new(sizeof(Sorcerer) * S_num);
+	for (int i = 0 ; i < S_num; i++)
+		new(&S[i])Sorcerer(Test_map);
 	
 	Test_map.display();
 	while (!game_over(K, P))

@@ -19,7 +19,7 @@ public:
 	void create_char(Character* Char);
 	void add_to_vector(Character* address);
 	char map_elem(int X, int Y);
-	int vec_size();
+	int  vec_size();
 	void vec_erase(int i);
 	Character* select_char(int i);
 	int height();

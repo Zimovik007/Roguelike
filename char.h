@@ -8,7 +8,7 @@
 class Character
 {	
 public:
-	virtual void move(Map &M) = 0;
+	virtual int move(Map &M) = 0;
 	virtual void find_x_y(Map &M);
 	virtual int damage(int Dam);
 	virtual int hit_points();
@@ -22,11 +22,13 @@ protected:
 	int Pos_y;
 };
 
+// GOOD CHARACTERS
+
 class Princess : public Character
 {
 public:
 	Princess(Map &M);
-	void move(Map &M);
+	int move(Map &M);
 };
 
 class Knight : public Character
@@ -34,7 +36,7 @@ class Knight : public Character
 public:
 	Knight(Map &M);
 	int winner();
-	void move(Map &M);
+	int move(Map &M);
 	int check_win(Princess P);
 	void level_up();
 	int level();
@@ -44,10 +46,12 @@ protected:
 	int Mob_to_next_level;
 };
 
+// MONSTERS
+
 class Monster : public Character
 {
 public:
-	void move(Map &M);
+	int move(Map &M);
 };
 
 class Zombie : public Monster
@@ -62,4 +66,22 @@ class Dragon : public Monster
 public:
 	Dragon(Map &M);
 	Dragon(int X, int Y, Map &M);
+};
+
+class Sorcerer : public Monster
+{
+public:
+	Sorcerer(Map &M);
+	int move(Map &M);
+private:
+	int Cnt_move;
+};
+
+// SPELLS
+
+class Fireball : public Character
+{
+public:
+	Fireball(int X, int Y, char C, Map &M);
+	int move(Map &M);
 };

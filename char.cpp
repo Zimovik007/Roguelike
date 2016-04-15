@@ -82,7 +82,7 @@ void Knight::level_up()
 	Mob_to_next_level = 3 + Level;
 }
 
-void Knight::move(Map &M)
+int Knight::move(Map &M)
 {
 	int i, Tx, Ty, Changed = 0;
 	char c;
@@ -95,7 +95,7 @@ void Knight::move(Map &M)
 		if (c == 's') {Tx = Pos_x; Ty = Pos_y + 1; Good_char = 0;}
 		if (c == 'a') {Tx = Pos_x - 1; Ty = Pos_y; Good_char = 0;}
 		if (c == 'd') {Tx = Pos_x + 1; Ty = Pos_y; Good_char = 0;}
-		if (c == 't') {return;}
+		if (c == 't') {return 0;}
 	}
 	c = M.map_elem(Tx, Ty);
 	
@@ -109,7 +109,7 @@ void Knight::move(Map &M)
 		M.change(Tx, Ty, Pos_x, Pos_y);
 		Changed = 1;
 		Win = 1;		
-		return;
+		return 0;
 	}
 	else if (c != '#')
 	{
@@ -130,6 +130,7 @@ void Knight::move(Map &M)
 	 
 	}
 	if (Changed){Pos_x = Tx; Pos_y = Ty;}
+	return 0;
 }
 
 int Knight::winner()
@@ -158,14 +159,14 @@ Princess::Princess(Map &M)
 	M.add_to_vector(this);
 }
 
-void Princess::move(Map &M)
+int Princess::move(Map &M)
 {
-	
+	return 0;
 }
 
 // MONSTER
 
-void Monster::move(Map &M)
+int Monster::move(Map &M)
 {
 	int Changed = 0;
 	int Tx, Ty, i;
@@ -184,7 +185,7 @@ void Monster::move(Map &M)
 	}
 	else if ((c == 'K') || (c == 'P'))
 	{
-		for (i = 0; i < 1; i++)
+		for (i = 1; i < 2; i++)
 		{
 			if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
 			{
@@ -199,6 +200,7 @@ void Monster::move(Map &M)
 		}	
 	}
 	if (Changed){Pos_x = Tx; Pos_y = Ty;}
+	return 0;
 }
 
 // ZOMBIE
@@ -243,7 +245,85 @@ Dragon::Dragon(Map &M)
 	M.add_to_vector(this);
 }
 
+// SORCERER
 
+Sorcerer::Sorcerer(Map &M)
+{
+	find_x_y(M);
+	Health = 150;
+	Damage = 15;
+	Cnt_move = 0;
+	M.create_char(Pos_x, Pos_y, 'S');
+	M.add_to_vector(this);
+}
 
+int Sorcerer::move(Map &M)
+{
+	int Tx, Ty;
+	Monster::move(M);
+	Cnt_move++;
+	if (!(Cnt_move % 3))
+	{
+		int c = rand() % 4;
+		if (c == 0){Tx = Pos_x + 1; Ty = Pos_y; c = '>';}
+		if (c == 1){Tx = Pos_x - 1; Ty = Pos_y; c = '<';}		
+		if (c == 2){Tx = Pos_x; Ty = Pos_y + 1; c = 'V';}
+		if (c == 3){Tx = Pos_x; Ty = Pos_y - 1; c = '^';}
+		
+		if (M.map_elem(Tx, Ty) == '.')
+		{
+			
+		}
+	}
+}
 
+// FIREBALL
 
+Fireball::Fireball(int X, int Y, char C, Map &M)
+{
+	Pos_x = X;
+	Pos_y = Y;
+	Damage = 20;
+	Health = 1;
+	M.create_char(Pos_x, Pos_y, C);
+	M.add_to_vector(this);
+}
+
+int Fireball::move(Map &M)
+{
+	int C, i;
+	int Tx, Ty;
+	if (M.map_elem(Pos_x, Pos_y) == '^'){Tx = Pos_x; Ty = Pos_y - 1;}
+	if (M.map_elem(Pos_x, Pos_y) == '>'){Tx = Pos_x + 1; Ty = Pos_y;}
+	if (M.map_elem(Pos_x, Pos_y) == '<'){Tx = Pos_x - 1; Ty = Pos_y;}
+	if (M.map_elem(Pos_x, Pos_y) == 'V'){Tx = Pos_x; Ty = Pos_y + 1;}
+	
+	
+	C = M.map_elem(Tx, Ty);
+	
+	if (C == '.')
+		M.change(Tx, Ty, Pos_x, Pos_y);
+	else if (C == '#')
+	{
+		M.change(Pos_x, Pos_y, Pos_x, Pos_y);
+		return 1;
+	}
+	else
+		{
+			for (i = 1; i < M.vec_size(); i++)
+			{
+				if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
+				{
+					if (M.select_char(i)->damage(cnt_damage()))
+					{
+						M.vec_erase(i);
+						M.change(Tx, Ty, Pos_x, Pos_y);
+					}
+					return 1;
+				}
+			}	
+		}
+	Pos_x = Tx; 
+	Pos_y = Ty;	
+	return 0;
+}
