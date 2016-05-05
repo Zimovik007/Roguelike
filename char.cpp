@@ -183,7 +183,7 @@ int Monster::move(Map &M)
 		M.change(Tx, Ty, Pos_x, Pos_y);
 		Changed = 1;
 	}
-	else if ((c == 'K') || (c == 'P'))
+	else if (c == 'K')
 	{
 		for (i = 1; i < 2; i++)
 		{
@@ -267,14 +267,13 @@ int Sorcerer::move(Map &M)
 		int c = rand() % 4;
 		if (c == 0){Tx = Pos_x + 1; Ty = Pos_y; c = '>';}
 		if (c == 1){Tx = Pos_x - 1; Ty = Pos_y; c = '<';}		
-		if (c == 2){Tx = Pos_x; Ty = Pos_y + 1; c = 'V';}
+		if (c == 2){Tx = Pos_x; Ty = Pos_y + 1; c = 'v';}
 		if (c == 3){Tx = Pos_x; Ty = Pos_y - 1; c = '^';}
 		
 		if (M.map_elem(Tx, Ty) == '.')
-		{
-			
-		}
+			new Fireball(Tx, Ty, c, M);
 	}
+	return 0; 
 }
 
 // FIREBALL
@@ -283,7 +282,7 @@ Fireball::Fireball(int X, int Y, char C, Map &M)
 {
 	Pos_x = X;
 	Pos_y = Y;
-	Damage = 20;
+	Damage = 200;
 	Health = 1;
 	M.create_char(Pos_x, Pos_y, C);
 	M.add_to_vector(this);
@@ -291,39 +290,47 @@ Fireball::Fireball(int X, int Y, char C, Map &M)
 
 int Fireball::move(Map &M)
 {
-	int C, i;
+	printw("Fireball!\n");
+	printw("cur_pos: %d %d\n", Pos_x, Pos_y);
+	int i;
 	int Tx, Ty;
 	if (M.map_elem(Pos_x, Pos_y) == '^'){Tx = Pos_x; Ty = Pos_y - 1;}
 	if (M.map_elem(Pos_x, Pos_y) == '>'){Tx = Pos_x + 1; Ty = Pos_y;}
 	if (M.map_elem(Pos_x, Pos_y) == '<'){Tx = Pos_x - 1; Ty = Pos_y;}
-	if (M.map_elem(Pos_x, Pos_y) == 'V'){Tx = Pos_x; Ty = Pos_y + 1;}
+	if (M.map_elem(Pos_x, Pos_y) == 'v'){Tx = Pos_x; Ty = Pos_y + 1;}
 	
+	printw("next_pos: %d %d\n", Tx, Ty);
 	
-	C = M.map_elem(Tx, Ty);
+	char C = M.map_elem(Tx, Ty);
 	
 	if (C == '.')
 		M.change(Tx, Ty, Pos_x, Pos_y);
-	else if (C == '#')
+	else 
+	if ((C == '#') || (C == 'P'))
 	{
 		M.change(Pos_x, Pos_y, Pos_x, Pos_y);
 		return 1;
 	}
 	else
+	{
+		for (i = 1; i < M.vec_size(); i++)
 		{
-			for (i = 1; i < M.vec_size(); i++)
+			if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
 			{
-				if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
+				if (M.select_char(i)->damage(cnt_damage()))
 				{
-					if (M.select_char(i)->damage(cnt_damage()))
-					{
-						M.vec_erase(i);
-						M.change(Tx, Ty, Pos_x, Pos_y);
-					}
-					return 1;
+					M.vec_erase(i);
+					M.change(Tx, Ty, Pos_x, Pos_y);	
+					Pos_x = Tx; 
+					Pos_y = Ty;		
 				}
-			}	
-		}
+				M.change(Pos_x, Pos_y, Pos_x, Pos_y);
+				return 2;
+			}
+		}	
+	}
 	Pos_x = Tx; 
 	Pos_y = Ty;	
+	printw("cur_pos: %d %d\n", Pos_x, Pos_y);
 	return 0;
 }

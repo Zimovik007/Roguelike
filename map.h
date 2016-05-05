@@ -20,6 +20,7 @@ public:
 	void add_to_vector(Character* address);
 	char map_elem(int X, int Y);
 	int  vec_size();
+	void push_char_front(Character* C);
 	void vec_erase(int i);
 	Character* select_char(int i);
 	int height();

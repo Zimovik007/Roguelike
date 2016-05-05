@@ -38,9 +38,24 @@ int game_over(Knight K, Princess P)
 
 void next_move()
 {
-	for (int i = 0; i < Test_map.vec_size(); i++)
-		if (Test_map.select_char(i)->move(Test_map))
+	printw("%d\n", Test_map.vec_size());
+	int i = 0;
+	while (i < Test_map.vec_size())
+	{
+		int temp = Test_map.select_char(i)->move(Test_map); 
+		if (temp == 1)
+		{
 			Test_map.vec_erase(i);
+			i--;
+		}
+		if (temp == 2)
+		{
+			i--;
+			Test_map.vec_erase(i);	
+			i--;		
+		}
+		i++;			
+	}
 }
 
 void diff_level()
@@ -72,6 +87,7 @@ int main()
 	
 	Princess P(Test_map);
 	Knight K(Test_map);
+	
 	Zombie *Z = (Zombie*)operator new(sizeof(Zombie) * Z_num);
 	for (int i = 0 ; i < Z_num; i++)
 		new(&Z[i])Zombie(Test_map);
@@ -81,6 +97,8 @@ int main()
 	Sorcerer *S = (Sorcerer*)operator new(sizeof(Sorcerer) * S_num);
 	for (int i = 0 ; i < S_num; i++)
 		new(&S[i])Sorcerer(Test_map);
+	
+	
 	
 	Test_map.display();
 	while (!game_over(K, P))

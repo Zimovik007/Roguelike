@@ -98,6 +98,11 @@ void Map::add_to_vector(Character* address)
 	Chars.push_back(address);
 }
 
+void Map::push_char_front(Character* C)
+{
+	Chars.insert(Chars.begin(), C);
+}
+
 int Map::height()
 {
 	return Height;
