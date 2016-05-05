@@ -262,8 +262,8 @@ int Sorcerer::move(Map &M)
 	int Tx, Ty;
 	Monster::move(M);
 	Cnt_move++;
-	if (!(Cnt_move % 3))
-	{
+	//if (!(Cnt_move % 3))
+	//{
 		int c = rand() % 4;
 		if (c == 0){Tx = Pos_x + 1; Ty = Pos_y; c = '>';}
 		if (c == 1){Tx = Pos_x - 1; Ty = Pos_y; c = '<';}		
@@ -272,7 +272,7 @@ int Sorcerer::move(Map &M)
 		
 		if (M.map_elem(Tx, Ty) == '.')
 			new Fireball(Tx, Ty, c, M);
-	}
+	//}
 	return 0; 
 }
 
@@ -309,7 +309,7 @@ int Fireball::move(Map &M)
 	if ((C == '#') || (C == 'P'))
 	{
 		M.change(Pos_x, Pos_y, Pos_x, Pos_y);
-		return 1;
+		return -1;
 	}
 	else
 	{
@@ -319,13 +319,12 @@ int Fireball::move(Map &M)
 			{
 				if (M.select_char(i)->damage(cnt_damage()))
 				{
-					M.vec_erase(i);
 					M.change(Tx, Ty, Pos_x, Pos_y);	
 					Pos_x = Tx; 
 					Pos_y = Ty;		
 				}
 				M.change(Pos_x, Pos_y, Pos_x, Pos_y);
-				return 2;
+				return i;
 			}
 		}	
 	}

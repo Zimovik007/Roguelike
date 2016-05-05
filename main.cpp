@@ -38,21 +38,28 @@ int game_over(Knight K, Princess P)
 
 void next_move()
 {
-	printw("%d\n", Test_map.vec_size());
 	int i = 0;
 	while (i < Test_map.vec_size())
 	{
 		int temp = Test_map.select_char(i)->move(Test_map); 
-		if (temp == 1)
+		if (temp == -1)
 		{
 			Test_map.vec_erase(i);
 			i--;
 		}
-		if (temp == 2)
+		if (temp >= 1)
 		{
-			i--;
-			Test_map.vec_erase(i);	
-			i--;		
+			if (temp > i)
+			{
+				Test_map.vec_erase(temp);
+				Test_map.vec_erase(i);
+			}
+			else
+			{
+				Test_map.vec_erase(i);
+				Test_map.vec_erase(temp);
+			}
+			i--;			
 		}
 		i++;			
 	}
@@ -98,8 +105,7 @@ int main()
 	for (int i = 0 ; i < S_num; i++)
 		new(&S[i])Sorcerer(Test_map);
 	
-	
-	
+	erase();
 	Test_map.display();
 	while (!game_over(K, P))
 	{
