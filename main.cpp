@@ -83,6 +83,8 @@ void init_ncurses()
 	noecho();
 	init_pair(1, COLOR_YELLOW, COLOR_BLACK);
 	init_pair(2, COLOR_BLUE, COLOR_BLACK);
+	init_pair(3, COLOR_RED, COLOR_BLACK);
+	init_pair(4, COLOR_GREEN, COLOR_BLACK);
 }
 
 int main()
@@ -91,6 +93,9 @@ int main()
 	
 	init_ncurses();
 	diff_level();	
+	
+	DragonNest Nest(Test_map);
+	Graveyard Yard(Test_map);
 	
 	Princess P(Test_map);
 	Knight K(Test_map);
@@ -111,6 +116,10 @@ int main()
 	{
 		printw("Knight-Health: %d; Princess-Health: %d; Enemies: %d; Level: %d;\n", K.hit_points(), P.hit_points(), Test_map.vec_size() - 2, K.level());
 		next_move();
+		
+		Nest.move(Test_map);
+		Yard.move(Test_map);
+		
 		erase();
 		Test_map.display();		
 	}

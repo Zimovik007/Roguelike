@@ -262,8 +262,8 @@ int Sorcerer::move(Map &M)
 	int Tx, Ty;
 	Monster::move(M);
 	Cnt_move++;
-	//if (!(Cnt_move % 3))
-	//{
+	if (!(Cnt_move % 3))
+	{
 		int c = rand() % 4;
 		if (c == 0){Tx = Pos_x + 1; Ty = Pos_y; c = '>';}
 		if (c == 1){Tx = Pos_x - 1; Ty = Pos_y; c = '<';}		
@@ -272,7 +272,7 @@ int Sorcerer::move(Map &M)
 		
 		if (M.map_elem(Tx, Ty) == '.')
 			new Fireball(Tx, Ty, c, M);
-	//}
+	}
 	return 0; 
 }
 
@@ -290,8 +290,6 @@ Fireball::Fireball(int X, int Y, char C, Map &M)
 
 int Fireball::move(Map &M)
 {
-	printw("Fireball!\n");
-	printw("cur_pos: %d %d\n", Pos_x, Pos_y);
 	int i;
 	int Tx, Ty;
 	if (M.map_elem(Pos_x, Pos_y) == '^'){Tx = Pos_x; Ty = Pos_y - 1;}
@@ -299,17 +297,14 @@ int Fireball::move(Map &M)
 	if (M.map_elem(Pos_x, Pos_y) == '<'){Tx = Pos_x - 1; Ty = Pos_y;}
 	if (M.map_elem(Pos_x, Pos_y) == 'v'){Tx = Pos_x; Ty = Pos_y + 1;}
 	
-	printw("next_pos: %d %d\n", Tx, Ty);
-	
 	char C = M.map_elem(Tx, Ty);
 	
 	if (C == '.')
-		M.change(Tx, Ty, Pos_x, Pos_y);
-	else 
-	if ((C == '#') || (C == 'P'))
 	{
-		M.change(Pos_x, Pos_y, Pos_x, Pos_y);
-		return -1;
+		M.change(Tx, Ty, Pos_x, Pos_y);
+		Pos_x = Tx; 
+		Pos_y = Ty;
+		return 0;
 	}
 	else
 	{
@@ -328,8 +323,67 @@ int Fireball::move(Map &M)
 			}
 		}	
 	}
-	Pos_x = Tx; 
-	Pos_y = Ty;	
-	printw("cur_pos: %d %d\n", Pos_x, Pos_y);
-	return 0;
+	M.change(Pos_x, Pos_y, Pos_x, Pos_y);
+	return -1;
+}
+
+// GRAVEYARD
+
+Graveyard::Graveyard(Map &M)
+{
+	find_x_y(M);
+	Health = 100;
+	Damage = 15;
+	Cnt_move = 0;
+	M.create_char(Pos_x, Pos_y, '@');
+}
+
+int Graveyard::move(Map &M)
+{
+	Cnt_move++;
+	if (!(Cnt_move % 7))
+	{
+		int Tx = 0, Ty = 0, i = 0;
+		while ((M.map_elem(Tx, Ty) != '.') && (i < 10))
+		{
+			i++;
+			int c = rand() % 4;
+			if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
+			if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
+			if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
+			if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
+		}
+		if (i < 10)
+			new Zombie(Tx, Ty, M);
+	}
+}
+
+// DRAGON NEST
+
+DragonNest::DragonNest(Map &M)
+{
+	find_x_y(M);
+	Health = 100;
+	Damage = 15;
+	Cnt_move = 0;
+	M.create_char(Pos_x, Pos_y, '%');
+}
+
+int DragonNest::move(Map &M)
+{
+	Cnt_move++;
+	if ((Cnt_move % 15) == 0)
+	{
+		int Tx = 0, Ty = 0, i = 0;
+		while ((M.map_elem(Tx, Ty) != '.') && (i < 10))
+		{
+			i++;
+			int c = rand() % 4;
+			if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
+			if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
+			if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
+			if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
+		}
+		new Dragon(Tx, Ty, M);
+	}
 }

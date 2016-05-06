@@ -85,3 +85,25 @@ public:
 	Fireball(int X, int Y, char C, Map &M);
 	int move(Map &M);
 };
+
+// GRAVEYARD
+
+class Graveyard : public Character
+{
+public:
+	Graveyard(Map &M);
+	int move(Map &M);
+private:
+	int Cnt_move;
+};
+
+// DRAGON NEST
+
+class DragonNest : public Character
+{
+public:
+	DragonNest(Map &M);
+	int move(Map &M);
+private:
+	int Cnt_move;
+};

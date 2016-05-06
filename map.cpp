@@ -58,6 +58,10 @@ void Map::display()
 			else
 			if (Map_data[i][j] == '#'){attron(A_BOLD); addch(Map_data[i][j]); attroff(A_BOLD);}
 			else
+			if ((Map_data[i][j] == '@') || (Map_data[i][j] == '%')){attron(COLOR_PAIR(4)); addch(Map_data[i][j]); attroff(COLOR_PAIR(4));}
+			else
+			if ((Map_data[i][j] == '^') || (Map_data[i][j] == 'v') || (Map_data[i][j] == '<') || (Map_data[i][j] == '>')){attron(COLOR_PAIR(3)); addch(Map_data[i][j]); attroff(COLOR_PAIR(3));}
+			else
 				addch(Map_data[i][j]);
 		}	
 }
