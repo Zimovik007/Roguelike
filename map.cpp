@@ -62,6 +62,8 @@ void Map::display()
 			else
 			if ((Map_data[i][j] == '^') || (Map_data[i][j] == 'v') || (Map_data[i][j] == '<') || (Map_data[i][j] == '>')){attron(COLOR_PAIR(3)); addch(Map_data[i][j]); attroff(COLOR_PAIR(3));}
 			else
+			if (Map_data[i][j] == '+'){attron(COLOR_PAIR(4)); attron(A_BOLD); addch(Map_data[i][j]); attroff(COLOR_PAIR(4)); attroff(A_BOLD);}
+			else
 				addch(Map_data[i][j]);
 		}	
 }
@@ -74,6 +76,18 @@ int Map::vec_size()
 void Map::vec_erase(int i)
 {
 	Chars.erase(Chars.begin() + i);
+}
+
+void Map::vec_erase(int x, int y)
+{
+	for (int i = 0; i < Chars.size(); i++)
+	{
+		if ((Chars[i]->pos_x() == x) && (Chars[i]->pos_y() == y))
+		{
+			Chars.erase(Chars.begin() + i);
+			break;
+		}
+	}
 }
 
 void Map::create_char(int X, int Y, char c)
@@ -115,4 +129,9 @@ int Map::height()
 int Map::width()
 {
 	return Width;
+}
+
+int Map::symbol_char(int i)
+{
+	return Map_data[Chars[i]->pos_y()][Chars[i]->pos_x()];
 }

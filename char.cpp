@@ -60,12 +60,20 @@ int Character::pos_y()
 	return Pos_y;
 }
 
+void Character::get_health()
+{
+	Health += 10;
+	if (Health > Max_health)
+		Health = Max_health;
+}
+
 //KNIGHT
 
 Knight::Knight(Map &M)
 {
 	find_x_y(M);
 	Health = 100;
+	Max_health = Health;
 	Damage = 10;
 	Win = 0;
 	Level = 0;
@@ -78,6 +86,7 @@ void Knight::level_up()
 {
 	Level++;
 	Health = 100 + 10 * Level;
+	Max_health = Health;
 	Damage += 2;
 	Mob_to_next_level = 3 + Level;
 }
@@ -113,6 +122,11 @@ int Knight::move(Map &M)
 	}
 	else if (c != '#')
 	{
+		if (c == '+')
+		{
+			get_health();
+			Mob_to_next_level++;
+		}
 		for (i = 2; i < M.vec_size(); i++)
 		{
 			if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
@@ -130,6 +144,8 @@ int Knight::move(Map &M)
 	 
 	}
 	if (Changed){Pos_x = Tx; Pos_y = Ty;}
+	if (c == '+')
+		return -2;
 	return 0;
 }
 
@@ -154,6 +170,7 @@ Princess::Princess(Map &M)
 {
 	find_x_y(M);
 	Health = 100;
+	Max_health = Health;
 	Damage = 0;
 	M.create_char(Pos_x, Pos_y, 'P');	
 	M.add_to_vector(this);
@@ -199,6 +216,14 @@ int Monster::move(Map &M)
 			}
 		}	
 	}
+	if (c == '+')
+	{
+		M.vec_erase(Tx, Ty);
+		M.change(Tx, Ty, Pos_x, Pos_y);
+		Pos_x = Tx; 
+		Pos_y = Ty;
+		return -2;
+	}
 	if (Changed){Pos_x = Tx; Pos_y = Ty;}
 	return 0;
 }
@@ -208,6 +233,7 @@ int Monster::move(Map &M)
 Zombie::Zombie(int X, int Y, Map &M)
 {
 	Health = 20;
+	Max_health = Health;
 	Damage = 10;
 	Pos_x = X;
 	Pos_y = Y;
@@ -219,6 +245,7 @@ Zombie::Zombie(Map &M)
 {
 	find_x_y(M);
 	Health = 20;
+	Max_health = Health;
 	Damage = 10;
 	M.create_char(Pos_x, Pos_y, 'Z');
 	M.add_to_vector(this);
@@ -229,6 +256,7 @@ Zombie::Zombie(Map &M)
 Dragon::Dragon(int X, int Y, Map &M)
 {
 	Health = 100;
+	Max_health = Health;
 	Damage = 25;
 	Pos_x = X;
 	Pos_y = Y;
@@ -240,6 +268,7 @@ Dragon::Dragon(Map &M)
 {
 	find_x_y(M);
 	Health = 100;
+	Max_health = Health;
 	Damage = 25;
 	M.create_char(Pos_x, Pos_y, 'D');
 	M.add_to_vector(this);
@@ -251,6 +280,7 @@ Sorcerer::Sorcerer(Map &M)
 {
 	find_x_y(M);
 	Health = 150;
+	Max_health = Health;
 	Damage = 15;
 	Cnt_move = 0;
 	M.create_char(Pos_x, Pos_y, 'S');
@@ -260,7 +290,7 @@ Sorcerer::Sorcerer(Map &M)
 int Sorcerer::move(Map &M)
 {
 	int Tx, Ty;
-	Monster::move(M);
+	int res = Monster::move(M);
 	Cnt_move++;
 	if (!(Cnt_move % 3))
 	{
@@ -273,7 +303,7 @@ int Sorcerer::move(Map &M)
 		if (M.map_elem(Tx, Ty) == '.')
 			new Fireball(Tx, Ty, c, M);
 	}
-	return 0; 
+	return res; 
 }
 
 // FIREBALL
@@ -284,6 +314,7 @@ Fireball::Fireball(int X, int Y, char C, Map &M)
 	Pos_y = Y;
 	Damage = 200;
 	Health = 1;
+	Max_health = Health;
 	M.create_char(Pos_x, Pos_y, C);
 	M.add_to_vector(this);
 }
@@ -333,6 +364,7 @@ Graveyard::Graveyard(Map &M)
 {
 	find_x_y(M);
 	Health = 100;
+	Max_health = Health;
 	Damage = 15;
 	Cnt_move = 0;
 	M.create_char(Pos_x, Pos_y, '@');
@@ -341,21 +373,41 @@ Graveyard::Graveyard(Map &M)
 int Graveyard::move(Map &M)
 {
 	Cnt_move++;
-	if (!(Cnt_move % 7))
+	if ((Cnt_move % 7) == 0)
 	{
-		int Tx = 0, Ty = 0, i = 0;
-		while ((M.map_elem(Tx, Ty) != '.') && (i < 10))
+		int Tx = 0, Ty = 0, Cnt_free = 0;
+		
+		for (int i = 0; i < 4; i++)
 		{
-			i++;
-			int c = rand() % 4;
+			int c = i;
 			if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
 			if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
 			if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
 			if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
+			if (M.map_elem(Tx, Ty) == '.')
+				Cnt_free++;
 		}
-		if (i < 10)
-			new Zombie(Tx, Ty, M);
+		
+		if (Cnt_free)
+		{	
+			for (int i = 0; i < 4; i++)
+			{
+				int c = i;
+				if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
+				if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
+				if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
+				if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
+				if (M.map_elem(Tx, Ty) == '.')
+					Cnt_free--;
+				if (!Cnt_free)
+				{
+					new Zombie(Tx, Ty, M);
+					break;
+				}	
+			}
+		}
 	}
+	return 0;
 }
 
 // DRAGON NEST
@@ -364,6 +416,7 @@ DragonNest::DragonNest(Map &M)
 {
 	find_x_y(M);
 	Health = 100;
+	Max_health = Health;
 	Damage = 15;
 	Cnt_move = 0;
 	M.create_char(Pos_x, Pos_y, '%');
@@ -374,16 +427,53 @@ int DragonNest::move(Map &M)
 	Cnt_move++;
 	if ((Cnt_move % 15) == 0)
 	{
-		int Tx = 0, Ty = 0, i = 0;
-		while ((M.map_elem(Tx, Ty) != '.') && (i < 10))
+		int Tx = 0, Ty = 0, Cnt_free = 0;
+		
+		for (int i = 0; i < 4; i++)
 		{
-			i++;
-			int c = rand() % 4;
+			int c = i;
 			if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
 			if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
 			if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
 			if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
+			if (M.map_elem(Tx, Ty) == '.')
+				Cnt_free++;
 		}
-		new Dragon(Tx, Ty, M);
+		
+		if (Cnt_free)
+		{	
+			for (int i = 0; i < 4; i++)
+			{
+				int c = i;
+				if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
+				if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
+				if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
+				if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
+				if (M.map_elem(Tx, Ty) == '.')
+					Cnt_free--;
+				if (!Cnt_free)
+				{
+					new Dragon(Tx, Ty, M);
+					break;
+				}	
+			}
+		}
 	}
+	return 0;
+}
+
+// HEALTH BONUS
+
+HealthBonus::HealthBonus(Map &M)
+{
+	find_x_y(M);
+	Health = 1;
+	Max_health = Health;
+	M.create_char(Pos_x, Pos_y, '+');
+	M.add_to_vector(this);
+}
+
+int HealthBonus::move(Map &M)
+{
+	return 0;
 }

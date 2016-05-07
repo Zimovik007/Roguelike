@@ -14,6 +14,7 @@ int Z_num = 40;
 int D_num = 10;
 int S_num = 1;
 Map Test_map;
+int Cnt_move = 0, Cnt_health = 0;
 
 int game_over(Knight K, Princess P)
 {
@@ -38,6 +39,7 @@ int game_over(Knight K, Princess P)
 
 void next_move()
 {
+	Cnt_move++;
 	int i = 0;
 	while (i < Test_map.vec_size())
 	{
@@ -49,6 +51,8 @@ void next_move()
 		}
 		if (temp >= 1)
 		{
+			if (Test_map.symbol_char(i) == '+')
+				Cnt_health--;
 			if (temp > i)
 			{
 				Test_map.vec_erase(temp);
@@ -61,8 +65,17 @@ void next_move()
 			}
 			i--;			
 		}
-		i++;			
+		if (temp == -2)
+			Cnt_health--;
+		i++;
 	}
+	if ((Cnt_move % 5 == 0) && (Cnt_health < 5))
+	{
+		new HealthBonus(Test_map);
+		Cnt_health++;
+	}
+	if (Cnt_health == 5)
+		Cnt_move = 0;
 }
 
 void diff_level()
@@ -100,15 +113,12 @@ int main()
 	Princess P(Test_map);
 	Knight K(Test_map);
 	
-	Zombie *Z = (Zombie*)operator new(sizeof(Zombie) * Z_num);
-	for (int i = 0 ; i < Z_num; i++)
-		new(&Z[i])Zombie(Test_map);
-	Dragon *D = (Dragon*)operator new(sizeof(Dragon) * D_num);
-	for (int i = 0 ; i < D_num; i++)
-		new(&D[i])Dragon(Test_map);
-	Sorcerer *S = (Sorcerer*)operator new(sizeof(Sorcerer) * S_num);
-	for (int i = 0 ; i < S_num; i++)
-		new(&S[i])Sorcerer(Test_map);
+	//for (int i = 0 ; i < Z_num; i++)
+	//	new Zombie(Test_map);
+	//for (int i = 0 ; i < D_num; i++)
+		//new Dragon(Test_map);
+	//for (int i = 0 ; i < S_num; i++)
+		//new Sorcerer(Test_map);
 	
 	erase();
 	Test_map.display();
@@ -121,7 +131,9 @@ int main()
 		Yard.move(Test_map);
 		
 		erase();
-		Test_map.display();		
+		Test_map.display();
+		
+	printw("%d %d", Cnt_move, Cnt_health);
 	}
 	while (getch() != 'q'){}
 	endwin();

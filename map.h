@@ -17,6 +17,8 @@ public:
 	void create_char(int X, int Y, char c);
 	void change(int X1, int Y1, int X2, int Y2);
 	void create_char(Character* Char);
+	int symbol_char(int i);
+	void vec_erase(int x, int y);
 	void add_to_vector(Character* address);
 	char map_elem(int X, int Y);
 	int  vec_size();

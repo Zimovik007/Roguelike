@@ -15,7 +15,9 @@ public:
 	virtual int cnt_damage();
 	virtual int pos_x();
 	virtual int pos_y();
+	virtual void get_health();
 protected:
+	int Max_health;
 	int Health;
 	int Damage;
 	int Pos_x;
@@ -79,12 +81,16 @@ private:
 
 // SPELLS
 
+//FIREBALL
+
 class Fireball : public Character
 {
 public:
 	Fireball(int X, int Y, char C, Map &M);
 	int move(Map &M);
 };
+
+// OBJECTS
 
 // GRAVEYARD
 
@@ -106,4 +112,15 @@ public:
 	int move(Map &M);
 private:
 	int Cnt_move;
+};
+
+// BONUS
+
+// HEALTH
+
+class HealthBonus : public Character
+{
+public:
+	HealthBonus(Map &M);
+	int move(Map &M);
 };
