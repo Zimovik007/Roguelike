@@ -28,7 +28,7 @@ void Character::find_x_y(Map &M)
 				Ran--;
 			if (!Ran)
 			{
-				Pos = Point(i,j);
+				Pos = Point(j, i);
 				return;
 			}
 		}
@@ -81,7 +81,6 @@ Point Character::pos()
 
 Knight::Knight(Map &M)
 {
-	Pos = Point(0, 0);
 	find_x_y(M);
 	Health = 10000;
 	Max_health = Health;
@@ -184,7 +183,6 @@ int Knight::check_win(Princess P)
 
 Princess::Princess(Map &M)
 {
-	Pos = Point(0, 0);
 	find_x_y(M);
 	Health = 100;
 	Max_health = Health;
@@ -204,12 +202,9 @@ int Princess::move(Map &M)
 int Monster::move(Map &M)
 {
 	int i;
-	Point Temp;
 	int c = rand() % 4;
-	if (c == 0){Temp = Pos.move_right();}
-	if (c == 1){Temp = Pos.move_left();}		
-	if (c == 2){Temp = Pos.move_down();}
-	if (c == 3){Temp = Pos.move_up();}
+	
+	Point Temp = Pos.random_shift(c);	
 	
 	c = M.map_elem(Temp);
 	
@@ -249,7 +244,6 @@ int Monster::move(Map &M)
 
 Zombie::Zombie(Map &M)
 {
-	Pos = Point(0, 0);
 	find_x_y(M);
 	Health = 20;
 	Max_health = Health;
@@ -261,7 +255,6 @@ Zombie::Zombie(Map &M)
 
 Zombie::Zombie(Point Temp, Map &M)
 {
-	Pos = Point(0, 0);
 	Pos = Temp;
 	Health = 20;
 	Max_health = Health;
@@ -275,7 +268,6 @@ Zombie::Zombie(Point Temp, Map &M)
 
 Dragon::Dragon(Map &M)
 {
-	Pos = Point(0, 0);
 	find_x_y(M);
 	Health = 100;
 	Max_health = Health;
@@ -287,7 +279,6 @@ Dragon::Dragon(Map &M)
 
 Dragon::Dragon(Point Temp, Map &M)
 {
-	Pos = Point(0, 0);
 	Pos = Temp;
 	Health = 100;
 	Max_health = Health;
@@ -301,7 +292,6 @@ Dragon::Dragon(Point Temp, Map &M)
 
 Sorcerer::Sorcerer(Map &M)
 {
-	Pos = Point(0, 0);
 	find_x_y(M);
 	Health = 150;
 	Max_health = Health;
@@ -335,7 +325,6 @@ int Sorcerer::move(Map &M)
 
 Fireball::Fireball(Point Temp, char C, Map &M)
 {
-	Pos = Point(0, 0);
 	Pos = Temp;
 	Damage = 200;
 	Health = 1;
@@ -385,7 +374,6 @@ int Fireball::move(Map &M)
 
 Graveyard::Graveyard(Map &M)
 {
-	Pos = Point(0, 0);
 	find_x_y(M);
 	Health = 100;
 	Max_health = Health;
@@ -405,11 +393,7 @@ int Graveyard::move(Map &M)
 		
 		for (int i = 0; i < 4; i++)
 		{
-			int c = i;
-			if (c == 0){Temp = Pos.move_right();}
-			if (c == 1){Temp = Pos.move_left();}		
-			if (c == 2){Temp = Pos.move_down();}
-			if (c == 3){Temp = Pos.move_up();}
+			Temp = Pos.random_shift(i);
 			if (M.map_elem(Temp) == Char_empty)
 				Cnt_free++;
 		}
@@ -418,11 +402,7 @@ int Graveyard::move(Map &M)
 		{	
 			for (int i = 0; i < 4; i++)
 			{
-				int c = i;
-				if (c == 0){Temp = Pos.move_right();}
-				if (c == 1){Temp = Pos.move_left();}		
-				if (c == 2){Temp = Pos.move_down();}
-				if (c == 3){Temp = Pos.move_up();}
+				Temp = Pos.random_shift(i);
 				if (M.map_elem(Temp) == Char_empty)
 					Cnt_free--;
 				if (!Cnt_free)
@@ -440,7 +420,6 @@ int Graveyard::move(Map &M)
 
 DragonNest::DragonNest(Map &M)
 {
-	Pos = Point(0, 0);
 	find_x_y(M);
 	Health = 100;
 	Max_health = Health;
@@ -460,11 +439,7 @@ int DragonNest::move(Map &M)
 		
 		for (int i = 0; i < 4; i++)
 		{
-			int c = i;
-			if (c == 0){Temp = Pos.move_right();}
-			if (c == 1){Temp = Pos.move_left();}		
-			if (c == 2){Temp = Pos.move_down();}
-			if (c == 3){Temp = Pos.move_up();}
+			Temp = Pos.random_shift(i);
 			if (M.map_elem(Temp) == Char_empty)
 				Cnt_free++;
 		}
@@ -473,11 +448,7 @@ int DragonNest::move(Map &M)
 		{	
 			for (int i = 0; i < 4; i++)
 			{
-				int c = i;
-				if (c == 0){Temp = Pos.move_right();}
-				if (c == 1){Temp = Pos.move_left();}		
-				if (c == 2){Temp = Pos.move_down();}
-				if (c == 3){Temp = Pos.move_up();}
+				Temp = Pos.random_shift(i);
 				if (M.map_elem(Temp) == Char_empty)
 					Cnt_free--;
 				if (!Cnt_free)
@@ -495,7 +466,6 @@ int DragonNest::move(Map &M)
 
 HealthBonus::HealthBonus(Map &M)
 {
-	Pos = Point(0, 0);
 	find_x_y(M);
 	Health = 1;
 	Max_health = Health;

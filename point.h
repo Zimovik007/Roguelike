@@ -22,6 +22,7 @@ public:
 	Point move_left();
 	Point move_up();
 	Point move_down();
+	Point random_shift(int c);
 private:
 	int X, Y;
 };

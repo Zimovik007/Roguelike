@@ -69,3 +69,11 @@ Point Point::move_left()
 {
 	return Point(X - 1, Y);
 }
+
+Point Point::random_shift(int c)
+{
+	if (c == 0){return move_right();}
+	if (c == 1){return move_left(); }		
+	if (c == 2){return move_down(); }
+	if (c == 3){return move_up();   }
+}
