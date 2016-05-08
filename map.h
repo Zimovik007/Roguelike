@@ -3,6 +3,7 @@
 #include <vector>
 
 class Character;
+class Point;
 
 class Map
 {
@@ -14,12 +15,12 @@ private:
 public:
 	Map();
 	void display();
-	void create_char(Point* Pos, char c);
+	void create_char(Point& Pos, char c);
 	char map_elem(int X, int Y);
-	char map_elem(Point* P);
+	char map_elem(Point& P);
 	void vec_erase(int i);
-	void vec_erase(Point* P);
-	void change(Point* P1, Point* P2);
+	void vec_erase(Point& P);
+	void change(Point& P1, Point& P2);
 	int symbol_char(int i);
 	void add_to_vector(Character* address);
 	int  vec_size();
