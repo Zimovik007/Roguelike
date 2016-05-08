@@ -16,12 +16,14 @@ public:
 	virtual int pos_x();
 	virtual int pos_y();
 	virtual void get_health();
+	virtual char get_symbol();
 protected:
 	int Max_health;
 	int Health;
 	int Damage;
 	int Pos_x;
 	int Pos_y;
+	char Symbol;
 };
 
 // GOOD CHARACTERS

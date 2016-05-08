@@ -44,14 +44,14 @@ void next_move()
 	while (i < Test_map.vec_size())
 	{
 		int temp = Test_map.select_char(i)->move(Test_map); 
-		if (temp == -1)
+		
+		if (temp == -1){ Test_map.vec_erase(i); i--; } //Если move объекта возвращает -1, то удаляем этот объект
+		
+		if (temp == -2){ Cnt_health--; } //Если move возвращает -2, значит объект съел жизненный бонус
+		
+		if (temp >= 1) //Если move объекта возвращает число >= 1, то удаляем элемент списка под этим номером и сам объект
 		{
-			Test_map.vec_erase(i);
-			i--;
-		}
-		if (temp >= 1)
-		{
-			if (Test_map.symbol_char(i) == '+')
+			if (Test_map.symbol_char(temp) == '+')
 				Cnt_health--;
 			if (temp > i)
 			{
@@ -65,10 +65,9 @@ void next_move()
 			}
 			i--;			
 		}
-		if (temp == -2)
-			Cnt_health--;
 		i++;
 	}
+	
 	if ((Cnt_move % 5 == 0) && (Cnt_health < 5))
 	{
 		new HealthBonus(Test_map);
@@ -113,12 +112,12 @@ int main()
 	Princess P(Test_map);
 	Knight K(Test_map);
 	
-	//for (int i = 0 ; i < Z_num; i++)
-	//	new Zombie(Test_map);
-	//for (int i = 0 ; i < D_num; i++)
-		//new Dragon(Test_map);
-	//for (int i = 0 ; i < S_num; i++)
-		//new Sorcerer(Test_map);
+	for (int i = 0 ; i < Z_num; i++)
+		new Zombie(Test_map);
+	for (int i = 0 ; i < D_num; i++)
+		new Dragon(Test_map);
+	for (int i = 0 ; i < S_num; i++)
+		new Sorcerer(Test_map);
 	
 	erase();
 	Test_map.display();
@@ -133,7 +132,6 @@ int main()
 		erase();
 		Test_map.display();
 		
-	printw("%d %d", Cnt_move, Cnt_health);
 	}
 	while (getch() != 'q'){}
 	endwin();

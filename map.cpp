@@ -133,5 +133,5 @@ int Map::width()
 
 int Map::symbol_char(int i)
 {
-	return Map_data[Chars[i]->pos_y()][Chars[i]->pos_x()];
+	return Chars[i]->get_symbol();
 }
