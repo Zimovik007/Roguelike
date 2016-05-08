@@ -106,8 +106,9 @@ int main()
 	init_ncurses();
 	diff_level();	
 	
-	DragonNest Nest(Test_map);
+	
 	Graveyard Yard(Test_map);
+	DragonNest Nest(Test_map);
 	
 	Princess P(Test_map);
 	Knight K(Test_map);

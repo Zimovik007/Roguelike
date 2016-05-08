@@ -14,16 +14,16 @@ private:
 public:
 	Map();
 	void display();
-	void create_char(int X, int Y, char c);
-	void change(int X1, int Y1, int X2, int Y2);
-	void create_char(Character* Char);
-	int symbol_char(int i);
-	void vec_erase(int x, int y);
-	void add_to_vector(Character* address);
+	void create_char(Point* Pos, char c);
 	char map_elem(int X, int Y);
+	char map_elem(Point* P);
+	void vec_erase(int i);
+	void vec_erase(Point* P);
+	void change(Point* P1, Point* P2);
+	int symbol_char(int i);
+	void add_to_vector(Character* address);
 	int  vec_size();
 	void push_char_front(Character* C);
-	void vec_erase(int i);
 	Character* select_char(int i);
 	int height();
 	int width();

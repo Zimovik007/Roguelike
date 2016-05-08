@@ -8,6 +8,7 @@
 
 #include "char.h"
 #include "map.h"
+#include "point.h"
 
 //CHARACTER
 
@@ -27,8 +28,7 @@ void Character::find_x_y(Map &M)
 			if (M.map_elem(j, i) == Char_empty) Ran--;
 			if (!Ran)
 			{
-				Pos_x = j;
-				Pos_y = i;
+				Pos = Point(i,j);
 				return;
 			}
 		}
@@ -52,12 +52,12 @@ int Character::damage(int Dam)
 
 int Character::pos_x()
 {
-	return Pos_x;
+	return Pos.get_x();
 }
 
 int Character::pos_y()
 {
-	return Pos_y;
+	return Pos.get_y();
 }
 
 void Character::get_health()
@@ -72,6 +72,11 @@ char Character::get_symbol()
 	return Symbol;
 }
 
+Point Character::pos()
+{
+	return Pos;
+}
+
 //KNIGHT
 
 Knight::Knight(Map &M)
@@ -83,7 +88,7 @@ Knight::Knight(Map &M)
 	Win = 0;
 	Level = 0;
 	Mob_to_next_level = 3;
-	M.create_char(Pos_x, Pos_y, Char_knight);	
+	M.create_char(&Pos, Char_knight);	
 	M.add_to_vector(this);
 	Symbol = Char_knight;
 }
@@ -99,34 +104,33 @@ void Knight::level_up()
 
 int Knight::move(Map &M)
 {
-	int i, Tx, Ty;
+	int i;
+	Point Temp;
 	char c;
 	int Good_char = 1;
 	
 	while (Good_char)
 	{
 		c = getch();
-		if (c == 'w') {Tx = Pos_x; Ty = Pos_y - 1; Good_char = 0;}
-		if (c == 's') {Tx = Pos_x; Ty = Pos_y + 1; Good_char = 0;}
-		if (c == 'a') {Tx = Pos_x - 1; Ty = Pos_y; Good_char = 0;}
-		if (c == 'd') {Tx = Pos_x + 1; Ty = Pos_y; Good_char = 0;}
+		if (c == 'w') {Temp = Pos.move_up();    Good_char = 0;}
+		if (c == 's') {Temp = Pos.move_down();  Good_char = 0;}
+		if (c == 'a') {Temp = Pos.move_left();  Good_char = 0;}
+		if (c == 'd') {Temp = Pos.move_right(); Good_char = 0;}
 		if (c == 't') {return 0;}
 	}
-	c = M.map_elem(Tx, Ty);
+	c = M.map_elem(&Temp);
 	
 	if (c == Char_empty)
 	{
-		M.change(Tx, Ty, Pos_x, Pos_y);
-		Pos_x = Tx; 
-		Pos_y = Ty;
+		M.change(&Temp, &Pos);
+		Pos = Temp;
 		return 0;
 	}
 	
 	if (c == Char_princess)
 	{
-		M.change(Tx, Ty, Pos_x, Pos_y);
-		Pos_x = Tx; 
-		Pos_y = Ty;
+		M.change(&Temp, &Pos);
+		Pos = Temp;
 		Win = 1;		
 		return 0;
 	}
@@ -135,16 +139,15 @@ int Knight::move(Map &M)
 	{
 		for (i = 2; i < M.vec_size(); i++)
 		{
-			if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
+			if (M.select_char(i)->pos() == Temp)
 				if (M.select_char(i)->damage(cnt_damage()))
 				{
 					M.vec_erase(i);
-					M.change(Tx, Ty, Pos_x, Pos_y);
+					M.change(&Temp, &Pos);
 					Mob_to_next_level--;
 					if (!Mob_to_next_level)
 						level_up();
-					Pos_x = Tx; 
-					Pos_y = Ty;
+					Pos = Temp;
 					break;
 				}						
 		}
@@ -173,7 +176,7 @@ int Knight::level()
 
 int Knight::check_win(Princess P)
 {
-	return ((pos_x() == P.pos_x()) && (pos_y() == P.pos_y()));
+	return (pos() == P.pos());
 }
 
 //PRINCESS
@@ -184,7 +187,7 @@ Princess::Princess(Map &M)
 	Health = 100;
 	Max_health = Health;
 	Damage = 0;
-	M.create_char(Pos_x, Pos_y, Char_princess);	
+	M.create_char(&Pos, Char_princess);	
 	M.add_to_vector(this);
 	Symbol = Char_princess;
 }
@@ -198,33 +201,32 @@ int Princess::move(Map &M)
 
 int Monster::move(Map &M)
 {
-	int Tx, Ty, i;
+	int i;
+	Point Temp;
 	int c = rand() % 4;
-	if (c == 0){Tx = Pos_x + 1;Ty = Pos_y;}
-	if (c == 1){Tx = Pos_x - 1;Ty = Pos_y;}		
-	if (c == 2){Tx = Pos_x;Ty = Pos_y + 1;}
-	if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
+	if (c == 0){Temp = Pos.move_right();}
+	if (c == 1){Temp = Pos.move_left();}		
+	if (c == 2){Temp = Pos.move_down();}
+	if (c == 3){Temp = Pos.move_up();}
 	
-	c = M.map_elem(Tx, Ty);
+	c = M.map_elem(&Temp);
 	
 	if (c == Char_empty)
 	{
-		M.change(Tx, Ty, Pos_x, Pos_y);
-		Pos_x = Tx; 
-		Pos_y = Ty;
+		M.change(&Temp, &Pos);
+		Pos = Temp;
 		return 0;
 	}
 	
 	if (c == Char_knight)
 	{
-		if ((M.select_char(1)->pos_x() == Tx) && (M.select_char(1)->pos_y() == Ty))
+		if (M.select_char(1)->pos() == Temp)
 		{
 			if (M.select_char(1)->damage(cnt_damage()))
 			{
 				M.vec_erase(1);
-				M.change(Tx, Ty, Pos_x, Pos_y);
-				Pos_x = Tx; 
-				Pos_y = Ty;
+				M.change(&Temp, &Pos);
+				Pos = Temp;
 			}
 		}
 		return 0;
@@ -232,10 +234,9 @@ int Monster::move(Map &M)
 	
 	if (c == Char_health)
 	{
-		M.vec_erase(Tx, Ty);
-		M.change(Tx, Ty, Pos_x, Pos_y);
-		Pos_x = Tx; 
-		Pos_y = Ty;
+		M.vec_erase(&Temp);
+		M.change(&Temp, &Pos);
+		Pos = Temp;
 		return -2;
 	}
 	
@@ -244,42 +245,29 @@ int Monster::move(Map &M)
 
 // ZOMBIE
 
-Zombie::Zombie(int X, int Y, Map &M)
-{
-	Health = 20;
-	Max_health = Health;
-	Damage = 10;
-	Pos_x = X;
-	Pos_y = Y;
-	M.create_char(X, Y, Char_zombie);	
-	M.add_to_vector(this);
-	Symbol = Char_zombie;
-}
-
 Zombie::Zombie(Map &M)
 {
 	find_x_y(M);
 	Health = 20;
 	Max_health = Health;
 	Damage = 10;
-	M.create_char(Pos_x, Pos_y, Char_zombie);
+	M.create_char(&Pos, Char_zombie);
+	M.add_to_vector(this);
+	Symbol = Char_zombie;
+}
+
+Zombie::Zombie(Point Temp, Map &M)
+{
+	Pos = Temp;
+	Health = 20;
+	Max_health = Health;
+	Damage = 10;
+	M.create_char(&Pos, Char_zombie);
 	M.add_to_vector(this);
 	Symbol = Char_zombie;
 }
 
 // DRAGON
-
-Dragon::Dragon(int X, int Y, Map &M)
-{
-	Health = 100;
-	Max_health = Health;
-	Damage = 25;
-	Pos_x = X;
-	Pos_y = Y;
-	M.create_char(X, Y, Char_dragon);	
-	M.add_to_vector(this);
-	Symbol = Char_dragon;
-}
 
 Dragon::Dragon(Map &M)
 {
@@ -287,7 +275,18 @@ Dragon::Dragon(Map &M)
 	Health = 100;
 	Max_health = Health;
 	Damage = 25;
-	M.create_char(Pos_x, Pos_y, Char_dragon);
+	M.create_char(&Pos, Char_dragon);
+	M.add_to_vector(this);
+	Symbol = Char_dragon;
+}
+
+Dragon::Dragon(Point Temp, Map &M)
+{
+	Pos = Temp;
+	Health = 100;
+	Max_health = Health;
+	Damage = 25;
+	M.create_char(&Pos, Char_dragon);
 	M.add_to_vector(this);
 	Symbol = Char_dragon;
 }
@@ -301,40 +300,39 @@ Sorcerer::Sorcerer(Map &M)
 	Max_health = Health;
 	Damage = 15;
 	Cnt_move = 0;
-	M.create_char(Pos_x, Pos_y, Char_sorcerer);
+	M.create_char(&Pos, Char_sorcerer);
 	M.add_to_vector(this);
 	Symbol = Char_sorcerer;
 }
 
 int Sorcerer::move(Map &M)
 {
-	int Tx, Ty;
+	Point Temp;
 	int res = Monster::move(M);
 	Cnt_move++;
 	if (!(Cnt_move % 3))
 	{
 		int c = rand() % 4;
-		if (c == 0){Tx = Pos_x + 1; Ty = Pos_y; c = Char_fireball_right;}
-		if (c == 1){Tx = Pos_x - 1; Ty = Pos_y; c = Char_fireball_left;}		
-		if (c == 2){Tx = Pos_x; Ty = Pos_y + 1; c = Char_fireball_down;}
-		if (c == 3){Tx = Pos_x; Ty = Pos_y - 1; c = Char_fireball_up;}
+		if (c == 0){Temp = Pos.move_right(); c = Char_fireball_right;}
+		if (c == 1){Temp = Pos.move_left(); c = Char_fireball_left;}		
+		if (c == 2){Temp = Pos.move_down(); c = Char_fireball_down;}
+		if (c == 3){Temp = Pos.move_up(); c = Char_fireball_up;}
 		
-		if (M.map_elem(Tx, Ty) == '.')
-			new Fireball(Tx, Ty, c, M);
+		if (M.map_elem(&Temp) == Char_empty)
+			new Fireball(Temp, c, M);
 	}
 	return res; 
 }
 
 // FIREBALL
 
-Fireball::Fireball(int X, int Y, char C, Map &M)
+Fireball::Fireball(Point Temp, char C, Map &M)
 {
-	Pos_x = X;
-	Pos_y = Y;
+	Pos = Temp;
 	Damage = 200;
 	Health = 1;
 	Max_health = Health;
-	M.create_char(Pos_x, Pos_y, C);
+	M.create_char(&Pos, C);
 	M.add_to_vector(this);
 	Symbol = C;
 }
@@ -342,38 +340,36 @@ Fireball::Fireball(int X, int Y, char C, Map &M)
 int Fireball::move(Map &M)
 {
 	int i;
-	int Tx, Ty;
-	if (M.map_elem(Pos_x, Pos_y) == Char_fireball_up)   {Tx = Pos_x; Ty = Pos_y - 1;}
-	if (M.map_elem(Pos_x, Pos_y) == Char_fireball_right){Tx = Pos_x + 1; Ty = Pos_y;}
-	if (M.map_elem(Pos_x, Pos_y) == Char_fireball_left) {Tx = Pos_x - 1; Ty = Pos_y;}
-	if (M.map_elem(Pos_x, Pos_y) == Char_fireball_down) {Tx = Pos_x; Ty = Pos_y + 1;}
+	Point Temp;
+	if (M.map_elem(&Pos) == Char_fireball_up)   {Temp = Pos.move_up();}
+	if (M.map_elem(&Pos) == Char_fireball_right){Temp = Pos.move_right();}
+	if (M.map_elem(&Pos) == Char_fireball_left) {Temp = Pos.move_left();}
+	if (M.map_elem(&Pos) == Char_fireball_down) {Temp = Pos.move_down();}
 	
-	char C = M.map_elem(Tx, Ty);
+	char C = M.map_elem(&Temp);
 	
 	if (C == Char_empty)
 	{
-		M.change(Tx, Ty, Pos_x, Pos_y);
-		Pos_x = Tx; 
-		Pos_y = Ty;
+		M.change(&Temp, &Pos);
+		Pos = Temp;
 		return 0;
 	}
 	
 	for (i = 1; i < M.vec_size(); i++)
 	{
-		if ((M.select_char(i)->pos_x() == Tx) && (M.select_char(i)->pos_y() == Ty))
+		if (M.select_char(i)->pos() == Temp)
 		{
 			if (M.select_char(i)->damage(cnt_damage()))
 			{
-				M.change(Tx, Ty, Pos_x, Pos_y);	
-				Pos_x = Tx; 
-				Pos_y = Ty;		
-				M.change(Pos_x, Pos_y, Pos_x, Pos_y);
+				M.change(&Temp, &Pos);	
+				Pos = Temp;
+				M.change(&Pos, &Pos);
 				return i;
 			}
 		}
 	}
 	
-	M.change(Pos_x, Pos_y, Pos_x, Pos_y);
+	M.change(&Pos, &Pos);
 	return -1;
 }
 
@@ -386,7 +382,7 @@ Graveyard::Graveyard(Map &M)
 	Max_health = Health;
 	Damage = 15;
 	Cnt_move = 0;
-	M.create_char(Pos_x, Pos_y, Char_graveyard);
+	M.create_char(&Pos, Char_graveyard);
 	Symbol = Char_graveyard;
 }
 
@@ -395,16 +391,17 @@ int Graveyard::move(Map &M)
 	Cnt_move++;
 	if ((Cnt_move % 7) == 0)
 	{
-		int Tx = 0, Ty = 0, Cnt_free = 0;
+		int Cnt_free = 0;
+		Point Temp;
 		
 		for (int i = 0; i < 4; i++)
 		{
 			int c = i;
-			if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
-			if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
-			if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
-			if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
-			if (M.map_elem(Tx, Ty) == Char_empty)
+			if (c == 0){Temp = Pos.move_right();}
+			if (c == 1){Temp = Pos.move_left();}		
+			if (c == 2){Temp = Pos.move_down();}
+			if (c == 3){Temp = Pos.move_up();}
+			if (M.map_elem(&Temp) == Char_empty)
 				Cnt_free++;
 		}
 		
@@ -413,15 +410,15 @@ int Graveyard::move(Map &M)
 			for (int i = 0; i < 4; i++)
 			{
 				int c = i;
-				if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
-				if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
-				if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
-				if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
-				if (M.map_elem(Tx, Ty) == Char_empty)
+				if (c == 0){Temp = Pos.move_right();}
+				if (c == 1){Temp = Pos.move_left();}		
+				if (c == 2){Temp = Pos.move_down();}
+				if (c == 3){Temp = Pos.move_up();}
+				if (M.map_elem(&Temp) == Char_empty)
 					Cnt_free--;
 				if (!Cnt_free)
 				{
-					new Zombie(Tx, Ty, M);
+					new Zombie(Temp, M);
 					break;
 				}	
 			}
@@ -439,7 +436,7 @@ DragonNest::DragonNest(Map &M)
 	Max_health = Health;
 	Damage = 15;
 	Cnt_move = 0;
-	M.create_char(Pos_x, Pos_y, Char_nest);
+	M.create_char(&Pos, Char_nest);
 	Symbol = Char_nest;
 }
 
@@ -448,16 +445,17 @@ int DragonNest::move(Map &M)
 	Cnt_move++;
 	if ((Cnt_move % 15) == 0)
 	{
-		int Tx = 0, Ty = 0, Cnt_free = 0;
+		int Cnt_free = 0;
+		Point Temp;
 		
 		for (int i = 0; i < 4; i++)
 		{
 			int c = i;
-			if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
-			if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
-			if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
-			if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
-			if (M.map_elem(Tx, Ty) == Char_empty)
+			if (c == 0){Temp = Pos.move_right();}
+			if (c == 1){Temp = Pos.move_left();}		
+			if (c == 2){Temp = Pos.move_down();}
+			if (c == 3){Temp = Pos.move_up();}
+			if (M.map_elem(&Temp) == Char_empty)
 				Cnt_free++;
 		}
 		
@@ -466,15 +464,15 @@ int DragonNest::move(Map &M)
 			for (int i = 0; i < 4; i++)
 			{
 				int c = i;
-				if (c == 0){Tx = Pos_x + 1; Ty = Pos_y;}
-				if (c == 1){Tx = Pos_x - 1; Ty = Pos_y;}		
-				if (c == 2){Tx = Pos_x; Ty = Pos_y + 1;}
-				if (c == 3){Tx = Pos_x; Ty = Pos_y - 1;}
-				if (M.map_elem(Tx, Ty) == Char_empty)
+				if (c == 0){Temp = Pos.move_right();}
+				if (c == 1){Temp = Pos.move_left();}		
+				if (c == 2){Temp = Pos.move_down();}
+				if (c == 3){Temp = Pos.move_up();}
+				if (M.map_elem(&Temp) == Char_empty)
 					Cnt_free--;
 				if (!Cnt_free)
 				{
-					new Dragon(Tx, Ty, M);
+					new Dragon(Temp, M);
 					break;
 				}	
 			}
@@ -490,7 +488,7 @@ HealthBonus::HealthBonus(Map &M)
 	find_x_y(M);
 	Health = 1;
 	Max_health = Health;
-	M.create_char(Pos_x, Pos_y, Char_health);
+	M.create_char(&Pos, Char_health);
 	M.add_to_vector(this);
 	Symbol = Char_health;
 }

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "map.h"
+#include "point.h"
 
 #define Char_knight         'K'
 #define Char_princess       'P'
@@ -30,14 +31,14 @@ public:
 	virtual int cnt_damage();
 	virtual int pos_x();
 	virtual int pos_y();
+	virtual Point pos();
 	virtual void get_health();
 	virtual char get_symbol();
 protected:
 	int Max_health;
 	int Health;
 	int Damage;
-	int Pos_x;
-	int Pos_y;
+	Point Pos;
 	char Symbol;
 };
 
@@ -77,14 +78,14 @@ class Zombie : public Monster
 {
 public:
 	Zombie(Map &M);
-	Zombie(int X, int Y, Map &M);
+	Zombie(Point Temp, Map &M);
 };
 
 class Dragon : public Monster
 {
 public:
 	Dragon(Map &M);
-	Dragon(int X, int Y, Map &M);
+	Dragon(Point Temp, Map &M);
 };
 
 class Sorcerer : public Monster
@@ -103,7 +104,7 @@ private:
 class Fireball : public Character
 {
 public:
-	Fireball(int X, int Y, char C, Map &M);
+	Fireball(Point Temp, char C, Map &M);
 	int move(Map &M);
 };
 
