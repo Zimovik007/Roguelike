@@ -52,17 +52,53 @@ void Map::display()
 	for (int i = 0; i < Height; i++, printw("\n"))
 		for (int j = 0; j < Width; j++)
 		{
-			if (Map_data[i][j] == 'K'){attron(COLOR_PAIR(1)); addch(Map_data[i][j]); attroff(COLOR_PAIR(1));}
+			if (Map_data[i][j] == Char_knight) //Цвет рыцаря
+			{
+				attron(COLOR_PAIR(1)); 
+				addch(Map_data[i][j]); 
+				attroff(COLOR_PAIR(1));
+			}
 			else 
-			if (Map_data[i][j] == 'P'){attron(COLOR_PAIR(2)); addch(Map_data[i][j]); attroff(COLOR_PAIR(2));}
+			if (Map_data[i][j] == Char_princess) //Цвет принцессы
+			{
+				attron(COLOR_PAIR(2)); 
+				addch(Map_data[i][j]); 
+				attroff(COLOR_PAIR(2));
+			}
 			else
-			if (Map_data[i][j] == '#'){attron(A_BOLD); addch(Map_data[i][j]); attroff(A_BOLD);}
+			if (Map_data[i][j] == Char_wall) //Цвет стен
+			{
+				attron(A_BOLD); 
+				addch(Map_data[i][j]); 
+				attroff(A_BOLD);
+			}
 			else
-			if ((Map_data[i][j] == '@') || (Map_data[i][j] == '%')){attron(COLOR_PAIR(4)); addch(Map_data[i][j]); attroff(COLOR_PAIR(4));}
+			if ((Map_data[i][j] == Char_nest)       || 
+			    (Map_data[i][j] == Char_graveyard))   //Цвет кладбища и гнезда
+			{
+				attron(COLOR_PAIR(4)); 
+				addch(Map_data[i][j]); 
+				attroff(COLOR_PAIR(4));
+			}
 			else
-			if ((Map_data[i][j] == '^') || (Map_data[i][j] == 'v') || (Map_data[i][j] == '<') || (Map_data[i][j] == '>')){attron(COLOR_PAIR(3)); addch(Map_data[i][j]); attroff(COLOR_PAIR(3));}
+			if ((Map_data[i][j] == Char_fireball_up)    || 
+			    (Map_data[i][j] == Char_fireball_down)  || 
+			    (Map_data[i][j] == Char_fireball_left)  || 
+			    (Map_data[i][j] == Char_fireball_right))  //Цвет огненных шаров
+			{
+				attron(COLOR_PAIR(3)); 
+				addch(Map_data[i][j]); 
+				attroff(COLOR_PAIR(3));
+			}
 			else
-			if (Map_data[i][j] == '+'){attron(COLOR_PAIR(4)); attron(A_BOLD); addch(Map_data[i][j]); attroff(COLOR_PAIR(4)); attroff(A_BOLD);}
+			if (Map_data[i][j] == Char_health)  //цвет бонуса здоровья
+			{
+				attron(COLOR_PAIR(4)); 
+				attron(A_BOLD); 
+				addch(Map_data[i][j]);  
+				attroff(A_BOLD);
+				attroff(COLOR_PAIR(4));
+			}
 			else
 				addch(Map_data[i][j]);
 		}	

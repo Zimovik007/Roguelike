@@ -3,6 +3,21 @@
 #include <vector>
 #include "map.h"
 
+#define Char_knight         'K'
+#define Char_princess       'P'
+#define Char_zombie         'Z'
+#define Char_dragon         'D'
+#define Char_sorcerer       'S'
+#define Char_empty          '.'
+#define Char_wall           '#'
+#define Char_health         '+'
+#define Char_graveyard      '%'
+#define Char_nest           '@'
+#define Char_fireball_up    '^'
+#define Char_fireball_down  'v'
+#define Char_fireball_right '>'
+#define Char_fireball_left  '<'
+
 //galeksanin@game_forest.com
 
 class Character

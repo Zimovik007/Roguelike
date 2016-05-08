@@ -51,7 +51,7 @@ void next_move()
 		
 		if (temp >= 1) //Если move объекта возвращает число >= 1, то удаляем элемент списка под этим номером и сам объект
 		{
-			if (Test_map.symbol_char(temp) == '+')
+			if (Test_map.symbol_char(temp) == Char_health)
 				Cnt_health--;
 			if (temp > i)
 			{
