@@ -5,9 +5,13 @@
 #include <vector>
 #include <ctime>
 #include <ncurses.h>
+#include <string>
 
 #include "map.h"
 #include "char.h"
+#include "config.h"
+
+using namespace std;
 
 int i;
 int Z_num = 40;
@@ -105,6 +109,15 @@ int main()
 	
 	init_ncurses();
 	diff_level();	
+	
+	erase();
+	
+	Configuration Con("/media/data/Users/Гусаров Владислав/Desktop/4 Семестр/Технологии программирования/RogueLike/config");
+	if (Con.read_file())
+	{
+		endwin();
+		return 0;
+	}
 	
 	
 	Graveyard Yard(Test_map);

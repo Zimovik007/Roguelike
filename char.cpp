@@ -10,6 +10,20 @@
 #include "map.h"
 #include "point.h"
 
+int Hp_knight = 100,
+	Hp_zombie = 20,
+	Hp_dragon = 100,
+	Hp_sorcerer = 150,
+	Hp_princess = 100,
+	Hp_fireball = 1,
+	Dm_knight = 10,
+	Dm_zombie = 10,
+	Dm_dragon = 25,
+	Dm_sorcerer = 15,
+	Dm_princess = 10,
+	Dm_fireball = 200;
+
+
 //CHARACTER
 
 void Character::find_x_y(Map &M)
@@ -82,9 +96,9 @@ Point Character::pos()
 Knight::Knight(Map &M)
 {
 	find_x_y(M);
-	Health = 10000;
+	Health = Hp_knight;
 	Max_health = Health;
-	Damage = 10;
+	Damage = Dm_knight;
 	Win = 0;
 	Level = 0;
 	Mob_to_next_level = 3;
@@ -184,9 +198,9 @@ int Knight::check_win(Princess P)
 Princess::Princess(Map &M)
 {
 	find_x_y(M);
-	Health = 100;
+	Health = Hp_princess;
 	Max_health = Health;
-	Damage = 0;
+	Damage = Dm_princess;
 	M.create_char(Pos, Char_princess);	
 	M.add_to_vector(this);
 	Symbol = Char_princess;
@@ -245,9 +259,9 @@ int Monster::move(Map &M)
 Zombie::Zombie(Map &M)
 {
 	find_x_y(M);
-	Health = 20;
+	Health = Hp_zombie;
 	Max_health = Health;
-	Damage = 10;
+	Damage = Dm_zombie;
 	M.create_char(Pos, Char_zombie);
 	M.add_to_vector(this);
 	Symbol = Char_zombie;
@@ -256,9 +270,9 @@ Zombie::Zombie(Map &M)
 Zombie::Zombie(Point Temp, Map &M)
 {
 	Pos = Temp;
-	Health = 20;
+	Health = Hp_zombie;
 	Max_health = Health;
-	Damage = 10;
+	Damage = Dm_zombie;
 	M.create_char(Pos, Char_zombie);
 	M.add_to_vector(this);
 	Symbol = Char_zombie;
@@ -269,9 +283,9 @@ Zombie::Zombie(Point Temp, Map &M)
 Dragon::Dragon(Map &M)
 {
 	find_x_y(M);
-	Health = 100;
+	Health = Hp_dragon;
 	Max_health = Health;
-	Damage = 25;
+	Damage = Dm_dragon;
 	M.create_char(Pos, Char_dragon);
 	M.add_to_vector(this);
 	Symbol = Char_dragon;
@@ -280,9 +294,9 @@ Dragon::Dragon(Map &M)
 Dragon::Dragon(Point Temp, Map &M)
 {
 	Pos = Temp;
-	Health = 100;
+	Health = Hp_dragon;
 	Max_health = Health;
-	Damage = 25;
+	Damage = Dm_dragon;
 	M.create_char(Pos, Char_dragon);
 	M.add_to_vector(this);
 	Symbol = Char_dragon;
@@ -293,9 +307,9 @@ Dragon::Dragon(Point Temp, Map &M)
 Sorcerer::Sorcerer(Map &M)
 {
 	find_x_y(M);
-	Health = 150;
+	Health = Hp_sorcerer;
 	Max_health = Health;
-	Damage = 15;
+	Damage = Dm_sorcerer;
 	Cnt_move = 0;
 	M.create_char(Pos, Char_sorcerer);
 	M.add_to_vector(this);
@@ -326,8 +340,8 @@ int Sorcerer::move(Map &M)
 Fireball::Fireball(Point Temp, char C, Map &M)
 {
 	Pos = Temp;
-	Damage = 200;
-	Health = 1;
+	Damage = Dm_fireball;
+	Health = Hp_fireball;
 	Max_health = Health;
 	M.create_char(Pos, C);
 	M.add_to_vector(this);

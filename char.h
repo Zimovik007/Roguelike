@@ -19,6 +19,20 @@
 #define Char_fireball_right '>'
 #define Char_fireball_left  '<'
 
+extern int 
+	Hp_knight,
+	Hp_zombie,
+	Hp_dragon,
+	Hp_sorcerer,
+	Hp_princess,
+	Hp_fireball,
+	Dm_knight,
+	Dm_zombie,
+	Dm_dragon,
+	Dm_sorcerer,
+	Dm_princess,
+	Dm_fireball;
+
 //galeksanin@game_forest.com
 
 class Character
