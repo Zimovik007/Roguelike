@@ -1,7 +1,7 @@
 #Roguelike
 Knight:
 health:
-400000000000000000000000000000000
+400
 damage:
 40
 Princess:

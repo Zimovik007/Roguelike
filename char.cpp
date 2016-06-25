@@ -26,6 +26,11 @@ int Hp_knight = 100,
 
 //CHARACTER
 
+int Character::winner()
+{}
+int Character::level()
+{}
+
 void Character::find_x_y(Map &M)
 {
 	int Cnt = 0;	
@@ -46,6 +51,12 @@ void Character::find_x_y(Map &M)
 				return;
 			}
 		}
+}
+
+void Character::change_pos(Point Temp, char c, Map& M)
+{
+	Pos = Temp;
+	M.create_char(Pos, c);
 }
 
 int Character::hit_points()
@@ -103,6 +114,19 @@ Knight::Knight(Map &M)
 	Level = 0;
 	Mob_to_next_level = 3;
 	M.create_char(Pos, Char_knight);	
+	M.add_to_vector(this);
+	Symbol = Char_knight;
+}
+
+Knight::Knight(Point Temp, Map &M)
+{
+	Pos = Temp;
+	Health = Hp_knight;
+	Max_health = Health;
+	Damage = Dm_knight;
+	Win = 0;
+	Level = 0;
+	Mob_to_next_level = 3;	
 	M.add_to_vector(this);
 	Symbol = Char_knight;
 }
@@ -202,6 +226,16 @@ Princess::Princess(Map &M)
 	Max_health = Health;
 	Damage = Dm_princess;
 	M.create_char(Pos, Char_princess);	
+	M.add_to_vector(this);
+	Symbol = Char_princess;
+}
+
+Princess::Princess(Point Temp, Map &M)
+{
+	Pos = Temp;
+	Health = Hp_princess;
+	Max_health = Health;
+	Damage = Dm_princess;	
 	M.add_to_vector(this);
 	Symbol = Char_princess;
 }
@@ -316,6 +350,18 @@ Sorcerer::Sorcerer(Map &M)
 	Symbol = Char_sorcerer;
 }
 
+Sorcerer::Sorcerer(Point Temp, Map &M)
+{
+	Pos = Temp;
+	Health = Hp_sorcerer;
+	Max_health = Health;
+	Damage = Dm_sorcerer;
+	Cnt_move = 0;
+	M.create_char(Pos, Char_sorcerer);
+	M.add_to_vector(this);
+	Symbol = Char_sorcerer;
+}
+
 int Sorcerer::move(Map &M)
 {
 	Point Temp;
@@ -394,6 +440,19 @@ Graveyard::Graveyard(Map &M)
 	Damage = 15;
 	Cnt_move = 0;
 	M.create_char(Pos, Char_graveyard);
+	M.add_to_unvector(this);
+	Symbol = Char_graveyard;
+}
+
+Graveyard::Graveyard(Point Temp, Map &M)
+{
+	Pos = Temp;
+	Health = 100;
+	Max_health = Health;
+	Damage = 15;
+	Cnt_move = 0;
+	M.create_char(Pos, Char_graveyard);
+	M.add_to_unvector(this);
 	Symbol = Char_graveyard;
 }
 
@@ -440,6 +499,19 @@ DragonNest::DragonNest(Map &M)
 	Damage = 15;
 	Cnt_move = 0;
 	M.create_char(Pos, Char_nest);
+	M.add_to_unvector(this);
+	Symbol = Char_nest;
+}
+
+DragonNest::DragonNest(Point Temp, Map &M)
+{
+	Pos = Temp;
+	Health = 100;
+	Max_health = Health;
+	Damage = 15;
+	Cnt_move = 0;
+	M.create_char(Pos, Char_nest);
+	M.add_to_unvector(this);
 	Symbol = Char_nest;
 }
 
@@ -481,6 +553,16 @@ int DragonNest::move(Map &M)
 HealthBonus::HealthBonus(Map &M)
 {
 	find_x_y(M);
+	Health = 1;
+	Max_health = Health;
+	M.create_char(Pos, Char_health);
+	M.add_to_vector(this);
+	Symbol = Char_health;
+}
+
+HealthBonus::HealthBonus(Point Temp, Map &M)
+{
+	Pos = Temp;
 	Health = 1;
 	Max_health = Health;
 	M.create_char(Pos, Char_health);

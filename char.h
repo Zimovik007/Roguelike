@@ -38,16 +38,19 @@ extern int
 class Character
 {	
 public:
-	virtual int move(Map &M) = 0;
-	virtual void find_x_y(Map &M);
-	virtual int damage(int Dam);
-	virtual int hit_points();
-	virtual int cnt_damage();
-	virtual int pos_x();
-	virtual int pos_y();
+	virtual int   move(Map &M) = 0;
+	virtual int   winner();
+	virtual void  find_x_y(Map &M);
+	virtual int   damage(int Dam);
+	virtual int   hit_points();
+	virtual int   cnt_damage();
+	virtual int   pos_x();
+	virtual int   pos_y();
+	virtual void  change_pos(Point Temp, char c, Map& M);
 	virtual Point pos();
-	virtual void get_health();
-	virtual char get_symbol();
+	virtual void  get_health();
+	virtual char  get_symbol();
+	virtual int   level();
 protected:
 	int Max_health;
 	int Health;
@@ -62,6 +65,7 @@ class Princess : public Character
 {
 public:
 	Princess(Map &M);
+	Princess(Point Temp, Map &M);
 	int move(Map &M);
 };
 
@@ -69,11 +73,12 @@ class Knight : public Character
 {
 public:
 	Knight(Map &M);
-	int winner();
+	Knight(Point Temp, Map &M);
+	int winner() override;
 	int move(Map &M);
 	int check_win(Princess P);
 	void level_up();
-	int level();
+	virtual int level();
 protected:
 	int Level;
 	int Win;
@@ -106,6 +111,7 @@ class Sorcerer : public Monster
 {
 public:
 	Sorcerer(Map &M);
+	Sorcerer(Point Temp, Map &M);
 	int move(Map &M);
 private:
 	int Cnt_move;
@@ -130,6 +136,7 @@ class Graveyard : public Character
 {
 public:
 	Graveyard(Map &M);
+	Graveyard(Point Temp, Map &M);
 	int move(Map &M);
 private:
 	int Cnt_move;
@@ -141,6 +148,7 @@ class DragonNest : public Character
 {
 public:
 	DragonNest(Map &M);
+	DragonNest(Point Temp, Map &M);
 	int move(Map &M);
 private:
 	int Cnt_move;
@@ -154,5 +162,6 @@ class HealthBonus : public Character
 {
 public:
 	HealthBonus(Map &M);
+	HealthBonus(Point Temp, Map &M);
 	int move(Map &M);
 };
